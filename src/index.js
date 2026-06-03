@@ -42,7 +42,7 @@ export const SERVICES = [
   {
     id: 1,
     title:      'IT Support & Services',
-    icon:       '💻',
+    icon:       '',
     image:      'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=600&q=80',
     colorClass: 'color-purple',
     items: [
@@ -57,7 +57,7 @@ export const SERVICES = [
   {
     id: 2,
     title:      'Drone Repair & Services',
-    icon:       '🚁',
+    icon:       '',
     image:      'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=600&q=80',
     colorClass: 'color-cyan',
     items: [
@@ -69,7 +69,7 @@ export const SERVICES = [
   {
     id: 3,
     title:      'CNC Programming & Designing',
-    icon:       '⚙️',
+    icon:       '',
     image:      'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=600&q=80',
     colorClass: 'color-green',
     items: [
@@ -116,7 +116,7 @@ export const ABOUT_VALUES = [
 ]
 
 export const TEAM = [
-  { name: 'Alex M.',  role: 'Lead IT Technician',    initials: 'AM', color: '#7c3aed' },
-  { name: 'Jordan T.', role: 'Drone Specialist',     initials: 'JT', color: '#06b6d4' },
-  { name: 'Sam K.',   role: 'CNC Engineer',           initials: 'SK', color: '#10b981' },
+  { name: 'Krishan Himesh.',  role: 'Lead IT Technician',    initials: 'AM', color: '#7c3aed' },
+  /*{ name: 'Jordan T.', role: 'Drone Specialist',     initials: 'JT', color: '#06b6d4' },
+  { name: 'Sam K.',   role: 'CNC Engineer',           initials: 'SK', color: '#10b981' },*/
 ]
