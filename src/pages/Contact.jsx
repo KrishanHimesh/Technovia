@@ -1,7 +1,13 @@
 import { useState } from 'react'
+import emailjs from '@emailjs/browser'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, FOOTER_CONTACTS } from '../index.js'
+import { useInView } from '../index.js'
+
+// Remember to update these with your actual EmailJS dashboard credentials!
+const EMAILJS_SERVICE_ID  = 'service_ffwavkv'        // ✅ your Gmail service
+const EMAILJS_TEMPLATE_ID = 'template_9mvxd6v'        // ⬅ replace this
+const EMAILJS_PUBLIC_KEY  = 'APi_ENA19Ymke5qUI'
 
 const SERVICE_OPTIONS = [
   'IT Support & Services',
@@ -13,15 +19,52 @@ const SERVICE_OPTIONS = [
 function ContactForm() {
   const [ref, inView] = useInView()
   const [submitted, setSubmitted] = useState(false)
+  const [isSending, setIsSending] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // In production, connect to a backend/email API here.
-    // For now we show a success state.
-    setSubmitted(true)
+    setIsSending(true)
+
+    try {
+      // 1. Admin Notification Email
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          phone: form.phone || 'Not provided',
+          service: form.service || 'General Enquiry',
+          message: form.message,
+          to_email: 'krishanhimesh@gmail.com',
+        },
+        EMAILJS_PUBLIC_KEY
+      )
+
+      // 2. Auto-Reply Email to Customer
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        'template_ayyxvp9', 
+        {
+          to_name: form.name,
+          to_email: form.email,
+          service: form.service || 'General Enquiry',
+          message: form.message,
+        },
+        EMAILJS_PUBLIC_KEY
+      )
+
+      setSubmitted(true)
+      setForm({ name: '', email: '', phone: '', service: '', message: '' })
+    } catch (err) {
+      console.error('EmailJS error:', err)
+      alert('Oops! Something went wrong while sending your message. Please try again.')
+    } finally {
+      setIsSending(false)
+    }
   }
 
   return (
@@ -36,7 +79,7 @@ function ContactForm() {
         <div className="form-success show">
           <div className="form-success-icon">✅</div>
           <p style={{ fontFamily: "'DM Sans',sans-serif", color: 'rgba(255,255,255,0.7)', marginTop: 8 }}>
-            Thanks, <strong style={{ color: '#fff' }}>{form.name}</strong>! We'll be in touch shortly.
+            Thanks! We'll be in touch shortly.
           </p>
         </div>
       ) : (
@@ -89,8 +132,8 @@ function ContactForm() {
             />
           </div>
 
-          <button type="submit" className="btn-primary form-submit">
-            Send Message →
+          <button type="submit" className="btn-primary form-submit" disabled={isSending}>
+            {isSending ? 'Sending...' : 'Send Message →'}
           </button>
         </form>
       )}
@@ -140,7 +183,6 @@ function ContactInfo() {
         </div>
       </div>
 
-      {/* Quick contact buttons */}
       <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
         <a href="tel:0476593934" className="btn-primary" style={{ textAlign: 'center', padding: '12px 0' }}>
           📞 Call Now
