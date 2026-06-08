@@ -3,16 +3,7 @@ import Home        from './pages/Home.jsx'
 import About       from './pages/About.jsx'
 import Services    from './pages/Services.jsx'
 import Contact     from './pages/Contact.jsx'
-import { Analytics } from '@vercel/analytics/react';
 
-export default function App() {
-  return (
-    <div>
-      {/* ... */}
-      <Analytics />
-    </div>
-  );
-}
 
 export default function App() {
   return (
