@@ -34,6 +34,7 @@ export const NAV_LINKS = [
   { label: 'Home',         path: '/'         },
   { label: 'About',        path: '/about'    },
   { label: 'Our Services', path: '/services' },
+  { label: 'Gallery',      path: '/gallery'  },
   { label: 'Contact',      path: '/contact'  },
 ]
 
@@ -120,3 +121,16 @@ export const TEAM = [
   /*{ name: 'Jordan T.', role: 'Drone Specialist',     initials: 'JT', color: '#06b6d4' },
   { name: 'Sam K.',   role: 'CNC Engineer',           initials: 'SK', color: '#10b981' },*/
 ]
+
+// ── SEO helpers ────────────────────────────────────────────────────────────────
+/**
+ * usePageMeta(title, description)
+ * Sets document <title> and meta description for each page client-side.
+ */
+export function usePageMeta(title, description) {
+  useEffect(() => {
+    document.title = title
+    let desc = document.querySelector('meta[name="description"]')
+    if (desc) desc.setAttribute('content', description)
+  }, [title, description])
+}

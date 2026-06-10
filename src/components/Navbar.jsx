@@ -27,7 +27,9 @@ export default function Navbar() {
     <>
       <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
         <NavLink to="/" className="nav-brand">
-          <div className="nav-logo-icon">⚡</div>
+          <div className="nav-logo-icon">
+            <img src="/favicon.svg" alt="Technovia logo" className="nav-logo-img" />
+          </div>
           <span className="nav-brand-name">Technovia</span>
         </NavLink>
 
@@ -65,7 +67,9 @@ export default function Navbar() {
       <div className={`mobile-drawer${menuOpen ? ' open' : ''}`}>
         <div className="mobile-drawer-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div className="nav-logo-icon" style={{ width: 32, height: 32, fontSize: 16 }}>⚡</div>
+            <div className="nav-logo-icon" style={{ width: 32, height: 32 }}>
+              <img src="/favicon.svg" alt="Technovia logo" className="nav-logo-img" />
+            </div>
             <span className="nav-brand-name" style={{ fontSize: 18 }}>Technovia</span>
           </div>
           <button className="mobile-close" onClick={() => setMenuOpen(false)} aria-label="Close">✕</button>

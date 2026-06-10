@@ -10,7 +10,9 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="nav-brand" style={{ textDecoration: 'none' }}>
-              <div className="nav-logo-icon" style={{ width: 32, height: 32, fontSize: 16 }}>⚡</div>
+              <div className="nav-logo-icon" style={{ width: 32, height: 32 }}>
+                <img src="/favicon.svg" alt="Technovia logo" className="nav-logo-img" />
+              </div>
               <span className="nav-brand-name" style={{ fontSize: 18 }}>Technovia</span>
             </Link>
             <p className="footer-tagline">

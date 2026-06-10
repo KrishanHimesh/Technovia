@@ -147,7 +147,61 @@ function TechCanvas() {
   )
 }
 
-// ── Service Card ──────────────────────────────────────────────────────────────
+// ── Gallery Teaser ────────────────────────────────────────────────────────────
+const TEASER_PHOTOS = [
+  { src: '/gallery/drone-repair-1.jpeg',   alt: 'Drone repair Cheltenham',          icon: '🔧', label: 'Drone Repair'      },
+  { src: '/gallery/battery-buk-fix-1.jpeg', alt: 'Drone battery service Cheltenham', icon: '🔋', label: 'Battery Service'   },
+  { src: '/gallery/drone-frame-1.jpeg',    alt: 'Drone frame fix Cheltenham',        icon: '✈️', label: 'Frame Repair'      },
+]
+
+function GalleryTeaser() {
+  const [ref, inView] = useInView()
+  return (
+    <section className="gallery-teaser-section">
+      <div className="section-header" ref={ref}>
+        <div className={`section-tag${inView ? ' in-view' : ''}`}>Real Work, Real Results</div>
+        <h2 className={`section-title${inView ? ' in-view' : ''}`}>
+          See Our <span className="gradient-text">Drone Repairs</span> Up Close
+        </h2>
+        <p className={`section-desc${inView ? ' in-view' : ''}`}>
+          Photos from actual jobs — drone motor replacements, battery reconditioning, frame repairs, and more.
+        </p>
+      </div>
+      <div className="gallery-teaser-grid">
+        {TEASER_PHOTOS.map((p, i) => (
+          <GalleryTeaserCard key={p.label} photo={p} index={i} />
+        ))}
+      </div>
+      <div style={{ textAlign: 'center', marginTop: 32 }}>
+        <Link to="/gallery" className="btn-primary">View Full Gallery →</Link>
+      </div>
+    </section>
+  )
+}
+
+function GalleryTeaserCard({ photo, index }) {
+  const [ref, inView] = useInView(0.1)
+  const [err, setErr] = useState(false)
+  return (
+    <div
+      ref={ref}
+      className={`gallery-teaser-card${inView ? ' in-view' : ''}`}
+      style={{ transitionDelay: `${index * 0.12}s` }}
+    >
+      {!err ? (
+        <img src={photo.src} alt={photo.alt} loading="lazy" onError={() => setErr(true)} />
+      ) : (
+        <div className="gallery-teaser-placeholder">
+          <span>{photo.icon}</span>
+          <span>Photo coming soon</span>
+        </div>
+      )}
+      <div className="gallery-teaser-label">{photo.label}</div>
+    </div>
+  )
+}
+
+
 function ServiceCard({ service, index }) {
   const [ref, inView] = useInView()
   return (
@@ -290,11 +344,12 @@ function HeroSection() {
 
       <div className="hero-content">
         <h1 className="hero-title">
-          Robust IT Solutions to <span className="highlight">Fortify</span> Your Home &amp; Business
+          IT Support, Drone Repair &amp; CNC Services in <span className="highlight">Cheltenham, VIC</span>
         </h1>
         <p className="hero-subtitle">
-          Welcome to Technovia — your trusted partner in IT solutions, dedicated to keeping
-          your business and home technology running smoothly.
+          Technovia is Cheltenham's trusted tech specialist — laptop &amp; computer repair,
+          drone and battery servicing, WiFi setup, and CNC design. Same-day service,
+          honest pricing, no jargon.
         </p>
         <div className="hero-buttons">
           <Link to="/services" className="btn-primary">Explore Services</Link>
@@ -322,6 +377,7 @@ export default function Home() {
       <HeroSection />
       <StatsSection />
       <ServicesSection />
+      <GalleryTeaser />
       <WhyUsSection />
       <CTASection />
       <Footer />

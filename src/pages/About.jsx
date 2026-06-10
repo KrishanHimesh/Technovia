@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, ABOUT_VALUES, STATS } from '../index.js'
+import { useInView, ABOUT_VALUES, STATS, usePageMeta } from '../index.js'
 
 function ValuesSection() {
   const [ref, inView] = useInView()
@@ -110,6 +110,10 @@ function CTAStrip() {
 }
 
 export default function About() {
+  usePageMeta(
+    'About Technovia – Local Tech Experts in Cheltenham, VIC',
+    'Learn about Technovia — Cheltenham\'s trusted IT support, drone repair, and CNC specialists. Fast, honest, local. Call 0476 593 934.'
+  )
   return (
     <div className="page-wrapper">
       <Navbar />

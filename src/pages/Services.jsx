@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView } from '../index.js'
+import { useInView, usePageMeta } from '../index.js'
 
 /* ─── All service data from the skeleton ─────────────────────────────────── */
 const IT_SUBSECTIONS = [
@@ -243,6 +243,10 @@ function ServiceTabs() {
 
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 export default function Services() {
+  usePageMeta(
+    'IT Support, Drone Repair & CNC Services – Technovia Cheltenham VIC',
+    'Full list of Technovia services: computer repair, drone motor & battery repair, WiFi setup, CNC design and programming. Cheltenham, VIC. Call 0476 593 934.'
+  )
   return (
     <div className="page-wrapper">
       <Navbar />
@@ -278,7 +282,7 @@ export default function Services() {
         colorClass="color-cyan"
         accent="#38bdf8"
         heroImg="https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=80"
-        heroAlt="Drone in flight"
+        heroAlt="Drone repair and battery service Cheltenham Technovia"
         intro="Professional drone diagnostics, repair, battery servicing, and maintenance for all major brands — hobby to commercial."
         subsections={DRONE_SUBSECTIONS}
       />
