@@ -20,7 +20,7 @@ const GALLERY_ITEMS = [
     category: 'battery',
     label: 'Battery Service',
     caption: 'Cell balancing and BMS check on a swollen LiPo pack.',
-    src: '/gallery/battery-service-1.jpeg',
+    src: '/gallery/battery-service-2.jpeg',
     alt: 'Drone battery repair cell balancing Cheltenham',
     fallbackBg: '#0e1a1e',
     fallbackIcon: '🔋',
