@@ -9,7 +9,7 @@ const GALLERY_ITEMS = [
     id: 1,
     category: 'drone',
     label: 'Drone Repair',
-    caption: 'Diagnosing a DJI Mini with motor failure — full inspection before repair.',
+    caption: 'Diagnosing a DJI Mavic Pro with motor failure — full inspection before repair.',
     src: '/gallery/drone-repair-1.jpeg',
     alt: 'Drone motor repair Cheltenham Technovia',
     fallbackBg: '#0e1a2e',
