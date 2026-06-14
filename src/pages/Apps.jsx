@@ -4,8 +4,9 @@ import { useInView, usePageMeta } from '../index.js'
 
 const APPS = [
   {
-    id: 'app',
-    label: 'App Portal',
+    id: 'VendrPro',
+    label: 'Technovia Inventory Management System',
+    appName: 'VendrPro',
     icon: '🖥️',
     url: 'https://app.technovia.com.au',
     colorClass: 'color-purple',
@@ -19,7 +20,8 @@ const APPS = [
   },
   {
     id: 'invoice',
-    label: 'Invoice Portal',
+    label: 'Technovia Free Invoice Generator ',
+    appName: 'InvoiceGen',
     icon: '🧾',
     url: 'https://invoice.technovia.com.au',
     colorClass: 'color-cyan',
@@ -57,7 +59,7 @@ function AppCard({ app, index }) {
           className="card-btn-primary"
           style={{ display: 'inline-block', textAlign: 'center', width: '100%' }}
         >
-          Open {app.label} →
+          Open {app.appName} →
         </a>
       </div>
     </div>
