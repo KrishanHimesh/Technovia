@@ -4,9 +4,8 @@ import { useInView, usePageMeta } from '../index.js'
 
 const APPS = [
   {
-    id: 'VendrPro',
-    label: 'Technovia Inventory Management System',
-    appName: 'VendrPro',
+    id: 'app',
+    label: 'App Portal',
     icon: '🖥️',
     url: 'https://app.technovia.com.au',
     colorClass: 'color-purple',
@@ -20,8 +19,7 @@ const APPS = [
   },
   {
     id: 'invoice',
-    label: 'Technovia Free Invoice Generator ',
-    appName: 'InvoiceGen',
+    label: 'Invoice Portal',
     icon: '🧾',
     url: 'https://invoice.technovia.com.au',
     colorClass: 'color-cyan',
@@ -41,13 +39,26 @@ function AppCard({ app, index }) {
     <div
       ref={ref}
       className={`service-card ${app.colorClass}${inView ? ' in-view' : ''}`}
-      style={{ transitionDelay: `${index * 0.15}s`, maxWidth: 480, width: '100%' }}
+      style={{
+        transitionDelay: `${index * 0.15}s`,
+        maxWidth: 480,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
     >
-      <div className="card-body" style={{ padding: '2.5rem 2rem' }}>
+      <div
+        className="card-body"
+        style={{
+          padding: '2.5rem 2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        }}
+      >
         <div style={{ fontSize: 48, marginBottom: 12 }}>{app.icon}</div>
-        <h3 className="card-title" style={{ fontSize: '1.5rem', marginBottom: 12 }}>{app.label}</h3>
-        <p style={{ color: 'var(--text-muted)', marginBottom: 20, lineHeight: 1.7 }}>{app.desc}</p>
-        <ul className="card-list" style={{ marginBottom: 28 }}>
+        <h3 className="card-title" style={{ fontSize: '2rem', marginBottom: 12 }}>{app.label}</h3>
+        <ul className="card-list" style={{ marginBottom: 28, flex: 1 }}>
           {app.features.map((f) => (
             <li key={f}><span className="card-list-dot">◆</span>{f}</li>
           ))}
@@ -57,9 +68,15 @@ function AppCard({ app, index }) {
           target="_blank"
           rel="noopener noreferrer"
           className="card-btn-primary"
-          style={{ display: 'inline-block', textAlign: 'center', width: '100%' }}
+          style={{
+            display: 'block',
+            textAlign: 'center',
+            width: '100%',
+            boxSizing: 'border-box',
+            marginTop: 'auto',
+          }}
         >
-          Open {app.appName} →
+          Open {app.label} →
         </a>
       </div>
     </div>
@@ -108,7 +125,7 @@ export default function Apps() {
 
         <div
           className="services-grid"
-          style={{ justifyContent: 'center', gap: '2rem' }}
+          style={{ justifyContent: 'center', gap: '2rem', alignItems: 'stretch' }}
         >
           {APPS.map((app, i) => (
             <AppCard key={app.id} app={app} index={i} />
@@ -118,7 +135,7 @@ export default function Apps() {
 
       {/* CTA */}
       <section className="cta-section">
-        <div className={`cta-box`} style={{ opacity: 1, transform: 'none' }}>
+        <div className="cta-box" style={{ opacity: 1, transform: 'none' }}>
           <div className="cta-orb-tr" /><div className="cta-orb-bl" />
           <p className="cta-tag">Need a hand?</p>
           <h2 className="cta-title">Can't find what you're looking for? <span className="gradient-text">We're here.</span></h2>
