@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom'
 import { FOOTER_SERVICES, FOOTER_CONTACTS, NAV_LINKS } from '../index.js'
 
+const FOOTER_APPS = [
+  { label: '🖥️ App Portal',     url: 'https://app.technovia.com.au'     },
+  { label: '🧾 Invoice Portal',  url: 'https://invoice.technovia.com.au' },
+]
+
 export default function Footer() {
   return (
     <footer className="footer">
@@ -26,6 +31,22 @@ export default function Footer() {
             <div className="footer-col-heading purple">Our Services</div>
             {FOOTER_SERVICES.map((s) => (
               <Link key={s} to="/services" className="footer-link">{s}</Link>
+            ))}
+          </div>
+
+          {/* Apps */}
+          <div>
+            <div className="footer-col-heading purple">Our Apps</div>
+            {FOOTER_APPS.map((a) => (
+              <a
+                key={a.url}
+                href={a.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link"
+              >
+                {a.label}
+              </a>
             ))}
           </div>
 
