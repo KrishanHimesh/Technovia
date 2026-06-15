@@ -60,6 +60,8 @@ function AppCard({ app, index }) {
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
         <div style={{ fontSize: 48, marginBottom: 12 }}>{app.icon}</div>
@@ -130,7 +132,7 @@ export default function Apps() {
         </div>
 
         <div
-          className="services-grid"
+          className="services-grid-apps"
           style={{ justifyContent: 'center', gap: '2rem', alignItems: 'stretch' }}
         >
           {APPS.map((app, i) => (
