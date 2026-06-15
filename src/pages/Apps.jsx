@@ -5,7 +5,7 @@ import { useInView, usePageMeta } from '../index.js'
 const APPS = [
   {
     id: 'app',
-    label: 'Inventory Management System',
+    label: 'All-in-one POS System',
     icon: '🖥️',
     url: 'https://app.technovia.com.au',
     colorClass: 'color-purple',
@@ -16,7 +16,7 @@ const APPS = [
       'Track sales, orders, and transactions',
       'Access real-time business reports',
       'Manage customers and supplier records',
-      'Monitor business performance dashboards',
+      'Business performance dashboards',
       'Secure access from anywhere, anytime'
     ],
   },
