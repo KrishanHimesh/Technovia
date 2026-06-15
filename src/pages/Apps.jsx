@@ -5,31 +5,37 @@ import { useInView, usePageMeta } from '../index.js'
 const APPS = [
   {
     id: 'app',
-    label: 'App Portal',
+    label: 'Inventory Management System',
     icon: '🖥️',
     url: 'https://app.technovia.com.au',
     colorClass: 'color-purple',
-    desc: 'Access the Technovia client portal — manage your service requests, track repairs, and stay up to date with your jobs.',
+    desc: 'Access the Technovia Business Portal — manage inventory, sales, customers, reporting, and all your business operations from one central platform.',
+
     features: [
-      'View & track service requests',
-      'Receive status updates in real time',
-      'Access your service history',
-      'Communicate with our technicians',
+      'Manage inventory and stock levels',
+      'Track sales, orders, and transactions',
+      'Access real-time business reports',
+      'Manage customers and supplier records',
+      'Monitor business performance dashboards',
+      'Secure access from anywhere, anytime'
     ],
   },
   {
     id: 'invoice',
-    label: 'Invoice Portal',
+    label: 'Invoice Geneerator',
     icon: '🧾',
     url: 'https://invoice.technovia.com.au',
     colorClass: 'color-cyan',
-    desc: 'View, download and pay your Technovia invoices securely online — fast and hassle-free.',
+    desc: 'Create, manage, and download professional invoices online — fast, secure, and accessible from anywhere.',
+
     features: [
-      'View outstanding & paid invoices',
-      'Download PDF copies',
-      'Secure online payments',
-      'Invoice history at a glance',
-    ],
+     'Create and send professional invoices',
+     'View and manage invoice history',
+     'Download PDF invoices instantly',
+     'Save client details for faster invoicing',
+     'Track invoice status and records',
+     'Access your invoices anytime, anywhere'
+   ],
   },
 ]
 
