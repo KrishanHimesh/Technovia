@@ -104,7 +104,7 @@ export default function Apps() {
       <Navbar />
 
       {/* Hero */}
-      <section className="hero" style={{ minHeight: '40vh', paddingTop: 140, paddingBottom: 80 }}>
+      <section className="hero" style={{ minHeight: '40vh', paddingTop: 10, paddingBottom: 1 }}>
         <div className="hero-grid-bg" />
         <div className="hero-orb hero-orb-1" />
         <div className="hero-orb hero-orb-2" />
@@ -121,16 +121,6 @@ export default function Apps() {
 
       {/* App Cards */}
       <section className="services-section">
-        <div className="section-header" ref={headerRef}>
-          <div className={`section-tag${headerInView ? ' in-view' : ''}`}>Our Online Portals</div>
-          <h2 className={`section-title${headerInView ? ' in-view' : ''}`}>
-            Your <span className="gradient-text">Digital Hub</span>
-          </h2>
-          <p className={`section-desc${headerInView ? ' in-view' : ''}`}>
-            Two dedicated portals built to make your experience with Technovia smooth and transparent.
-          </p>
-        </div>
-
         <div
           className="services-grid-apps"
           style={{ justifyContent: 'center', gap: '2rem', alignItems: 'stretch' }}
@@ -139,6 +129,18 @@ export default function Apps() {
             <AppCard key={app.id} app={app} index={i} />
           ))}
         </div>
+        <br/><br/>
+      
+
+        <div className="section-header" ref={headerRef}>
+          <div className={`section-tag${headerInView ? ' in-view' : ''}`}>Our Online Portals</div>
+          <h2 className={`section-title${headerInView ? ' in-view' : ''}`}>
+            Your <span className="gradient-text">Digital Hub</span>
+          </h2>
+          <p className={`section-desc${headerInView ? ' in-view' : ''}`}>
+            Two dedicated portals built to make your experience with Technovia smooth and transparent.
+          </p>
+        </div>        
       </section>
 
       {/* CTA */}
