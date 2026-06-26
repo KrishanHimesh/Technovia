@@ -187,7 +187,7 @@ function ContactInfo() {
         <a href="tel:0476593934" className="btn-primary" style={{ textAlign: 'center', padding: '12px 0' }}>
           📞 Call Now
         </a>
-        <a href="mailto:technoviaservices@gmail.com" className="cta-btn-email" style={{ display: 'block', textAlign: 'center', padding: '12px 0' }}>
+        <a href="mailto:info@technovia.com.au" className="cta-btn-email" style={{ display: 'block', textAlign: 'center', padding: '12px 0' }}>
           ✉ Send Email
         </a>
       </div>
