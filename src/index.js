@@ -107,7 +107,7 @@ export const FOOTER_SERVICES = [
 export const FOOTER_CONTACTS = [
   { icon: '📍', text: 'Cheltenham, VIC' },
   { icon: '📱', text: '0476 593 934' },
-  { icon: '✉',  text: 'technoviaservices@gmail.com' },
+  { icon: '✉',  text: 'info@technovia.com.au' },
 ]
 
 // ── About page ────────────────────────────────────────────────────────────────
