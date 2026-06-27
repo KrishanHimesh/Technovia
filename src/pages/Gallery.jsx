@@ -167,7 +167,7 @@ export default function Gallery() {
           <p className="cta-desc">Call us or drop in — we'll assess your drone or battery for free.</p>
           <div className="cta-buttons">
             <a href="tel:0476593934" className="btn-primary">📞 0476 593 934</a>
-            <a href="mailto:technoviaservices@gmail.com" className="cta-btn-email">✉ Email Us</a>
+            <a href="mailto:info@technovia.com.au" className="cta-btn-email">✉ Email Us</a>
           </div>
         </div>
       </section>

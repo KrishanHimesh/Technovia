@@ -152,7 +152,7 @@ export default function Apps() {
           <p className="cta-desc">Our team is happy to walk you through the portals or help with anything else.</p>
           <div className="cta-buttons">
             <a href="tel:0476593934" className="btn-primary">📞 0476 593 934</a>
-            <a href="mailto:technoviaservices@gmail.com" className="cta-btn-email">✉ Email Us</a>
+            <a href="mailto:info@technovia.com.au" className="cta-btn-email">✉ Email Us</a>
           </div>
         </div>
       </section>

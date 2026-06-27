@@ -317,7 +317,7 @@ function CTASection() {
         <p className="cta-desc">Call us, email us, or drop in. We're here to help with all your IT, drone, and CNC needs.</p>
         <div className="cta-buttons">
           <a href="tel:0476593934" className="btn-primary">📞 0476 593 934</a>
-          <a href="mailto:technoviaservices@gmail.com" className="cta-btn-email">✉ Email Us</a>
+          <a href="mailto:info@technovia.com.au" className="cta-btn-email">✉ Email Us</a>
         </div>
       </div>
     </section>

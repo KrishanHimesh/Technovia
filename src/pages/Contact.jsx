@@ -170,7 +170,7 @@ function ContactInfo() {
         <div>
           <div className="contact-item-label">Email</div>
           <div className="contact-item-value">
-            <a href="mailto:technoviaservices@gmail.com">technoviaservices@gmail.com</a>
+            <a href="mailto:info@technovia.com.au">info@technovia.com.au</a>
           </div>
         </div>
       </div>
