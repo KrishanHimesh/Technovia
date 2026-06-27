@@ -92,7 +92,7 @@ export default function Navbar() {
           <a href="tel:0476593934" className="btn-primary" style={{ display: 'block', textAlign: 'center', marginBottom: 12 }}>
             📞 0476 593 934
           </a>
-          <a href="mailto:technoviaservices@gmail.com" className="cta-btn-email" style={{ display: 'block', textAlign: 'center' }}>
+          <a href="mailto:info@technovia.com.au" className="cta-btn-email" style={{ display: 'block', textAlign: 'center' }}>
             ✉ Email Us
           </a>
         </div>
