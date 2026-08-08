@@ -5,7 +5,7 @@ import { useInView, usePageMeta } from '../index.js'
 const APPS = [
   {
     id: 'app',
-    label: 'All-in-one POS System',
+    label: 'TechnoPOS',
     icon: '🖥️',
     url: 'https://app.technovia.com.au',
     colorClass: 'color-purple',
@@ -22,7 +22,7 @@ const APPS = [
   },
   {
     id: 'invoice',
-    label: 'Invoice Geneerator',
+    label: 'InvoiceGen',
     icon: '🧾',
     url: 'https://invoice.technovia.com.au',
     colorClass: 'color-cyan',
@@ -36,6 +36,23 @@ const APPS = [
      'Track invoice status and records',
      'Access your invoices anytime, anywhere'
    ],
+  },
+  {
+    id: 'booking',
+    label: 'ChairTime',
+    icon: '📅',
+    url: 'https://booking.technovia.com.au',
+    colorClass: 'color-green',
+    desc: 'Online appointment booking made simple — let clients book, reschedule, and manage appointments anytime.',
+
+    features: [
+      'Online appointment booking 24/7',
+      'Manage staff schedules & availability',
+      'Automatic booking confirmations & reminders',
+      'Client history and appointment records',
+      'Reduce no-shows with easy rescheduling',
+      'Access your calendar from any device'
+    ],
   },
 ]
 
@@ -94,7 +111,7 @@ function AppCard({ app, index }) {
 export default function Apps() {
   usePageMeta(
     'Apps | Technovia — Cheltenham, VIC',
-    'Access the Technovia client app portal and invoice portal. Manage your service requests and invoices online.'
+    'Access TechnoPOS, InvoiceGen, and ChairTime — the Technovia suite of business apps for POS, invoicing, and appointment booking.'
   )
 
   const [headerRef, headerInView] = useInView()
@@ -113,8 +130,8 @@ export default function Apps() {
             Technovia <span className="highlight">Apps</span>
           </h1>
           <p className="hero-subtitle">
-            Everything you need, in one place. Access your client portal and invoices
-            securely online — anytime, from any device.
+            Everything you need, in one place. TechnoPOS, InvoiceGen, and ChairTime —
+            three tools built to run your business, securely online, anytime, from any device.
           </p>
         </div>
       </section>
@@ -138,7 +155,7 @@ export default function Apps() {
             Your <span className="gradient-text">Digital Hub</span>
           </h2>
           <p className={`section-desc${headerInView ? ' in-view' : ''}`}>
-            Two dedicated portals built to make your experience with Technovia smooth and transparent.
+            Three dedicated portals built to make your experience with Technovia smooth and transparent.
           </p>
         </div>        
       </section>

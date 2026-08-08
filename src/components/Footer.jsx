@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom'
 import { FOOTER_SERVICES, FOOTER_CONTACTS, NAV_LINKS } from '../index.js'
 
 const FOOTER_APPS = [
-  { label: '🖥️ App Portal',     url: 'https://app.technovia.com.au'     },
-  { label: '🧾 Invoice Portal',  url: 'https://invoice.technovia.com.au' },
+  { label: '🖥️ TechnoPOS',      url: 'https://app.technovia.com.au'     },
+  { label: '🧾 InvoiceGen',      url: 'https://invoice.technovia.com.au' },
+  { label: '📅 ChairTime',       url: 'https://booking.technovia.com.au' },
 ]
 
 export default function Footer() {
@@ -48,6 +49,20 @@ export default function Footer() {
                 {a.label}
               </a>
             ))}
+          </div>
+
+          {/* Work */}
+          <div>
+            <div className="footer-col-heading cyan">Our Work</div>
+            <Link to="/work" className="footer-link">Case Studies</Link>
+            <a
+              href="https://unityproducts.lk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-link"
+            >
+              🛒 Unity Products
+            </a>
           </div>
 
           {/* Contact */}

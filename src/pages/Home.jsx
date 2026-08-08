@@ -2,9 +2,82 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, SERVICES, STATS, WHY_FEATURES } from '../index.js'
+import { useInView, useCountUp, SERVICES, STATS, WHY_FEATURES, WORK_PROJECTS, TESTIMONIALS } from '../index.js'
 //prod
-// ── Animated Tech Canvas ──────────────────────────────────────────────────────
+// ── Animated Circuit Pulse Hero ────────────────────────────────────────────────
+// Procedurally generated PCB-style circuit traces (orthogonal paths) with glowing
+// data packets travelling along them, brightening near the cursor.
+function buildTrace(startGx, startGy, cols, rows) {
+  let dir = [{ x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }][Math.floor(Math.random() * 4)]
+  let gx = startGx, gy = startGy
+  const pts = [{ x: gx, y: gy }]
+  const segments = 5 + Math.floor(Math.random() * 6)
+
+  for (let s = 0; s < segments; s++) {
+    const stepLen = 1 + Math.floor(Math.random() * 4)
+    gx += dir.x * stepLen
+    gy += dir.y * stepLen
+
+    let bounced = false
+    if (gx < 1) { gx = 1; bounced = true }
+    if (gx > cols - 1) { gx = cols - 1; bounced = true }
+    if (gy < 1) { gy = 1; bounced = true }
+    if (gy > rows - 1) { gy = rows - 1; bounced = true }
+
+    pts.push({ x: gx, y: gy })
+
+    if (bounced || Math.random() < 0.65) {
+      dir = dir.x !== 0
+        ? { x: 0, y: Math.random() < 0.5 ? 1 : -1 }
+        : { x: Math.random() < 0.5 ? 1 : -1, y: 0 }
+    }
+  }
+  return pts
+}
+
+function makeTraces(width, height) {
+  const grid = Math.max(22, Math.min(width, height) / 13)
+  const cols = Math.max(4, Math.floor(width / grid))
+  const rows = Math.max(4, Math.floor(height / grid))
+  const count = Math.min(26, Math.max(12, Math.floor((cols * rows) / 22)))
+
+  return Array.from({ length: count }, (_, i) => {
+    const startGx = 1 + Math.floor(Math.random() * (cols - 2))
+    const startGy = 1 + Math.floor(Math.random() * (rows - 2))
+    const gridPts = buildTrace(startGx, startGy, cols, rows)
+    const points = gridPts.map((p) => ({ x: p.x * grid, y: p.y * grid }))
+
+    let total = 0
+    const cum = [0]
+    for (let j = 1; j < points.length; j++) {
+      const dx = points[j].x - points[j - 1].x
+      const dy = points[j].y - points[j - 1].y
+      total += Math.sqrt(dx * dx + dy * dy)
+      cum.push(total)
+    }
+
+    return {
+      points, cum, total,
+      cyan: i % 2 === 0,
+      speed: total / (4 + Math.random() * 6) / 60, // px per frame
+      phase: Math.random() * (total || 1),
+    }
+  })
+}
+
+function pointAt(trace, dist) {
+  const { points, cum, total } = trace
+  if (total === 0) return points[0]
+  const d = ((dist % total) + total) % total
+  let seg = 1
+  while (seg < cum.length && cum[seg] < d) seg++
+  seg = Math.min(seg, points.length - 1)
+  const segStart = cum[seg - 1], segEnd = cum[seg]
+  const t = segEnd > segStart ? (d - segStart) / (segEnd - segStart) : 0
+  const a = points[seg - 1], b = points[seg]
+  return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }
+}
+
 function TechCanvas() {
   const canvasRef = useRef(null)
 
@@ -12,108 +85,97 @@ function TechCanvas() {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
-    let animId
+    let animId, traces
 
     const resize = () => {
       canvas.width  = canvas.offsetWidth
       canvas.height = canvas.offsetHeight
+      traces = makeTraces(canvas.width, canvas.height)
     }
     resize()
     window.addEventListener('resize', resize)
 
-    // Nodes
-    const NODE_COUNT = 60
-    const nodes = Array.from({ length: NODE_COUNT }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      r: Math.random() * 2 + 1,
-      pulse: Math.random() * Math.PI * 2,
-    }))
-
-    // Mouse position
-    let mouse = { x: canvas.width / 2, y: canvas.height / 2 }
+    let mouse = { x: canvas.width / 2, y: canvas.height / 2, active: false }
     const onMove = (e) => {
       const rect = canvas.getBoundingClientRect()
-      mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top }
+      mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top, active: true }
     }
+    const onLeave = () => { mouse.active = false }
     canvas.addEventListener('mousemove', onMove)
+    canvas.addEventListener('mouseleave', onLeave)
 
     let t = 0
-    const LINK_DIST = 140
-    const MOUSE_DIST = 180
+    const PURPLE = '124,58,237'
+    const CYAN   = '6,182,212'
+    const MOUSE_GLOW = 170
 
     const draw = () => {
-      t += 0.012
+      t += 1
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Move nodes
-      nodes.forEach(n => {
-        n.x += n.vx
-        n.y += n.vy
-        n.pulse += 0.03
-        if (n.x < 0 || n.x > canvas.width)  n.vx *= -1
-        if (n.y < 0 || n.y > canvas.height) n.vy *= -1
+      traces.forEach((trace) => {
+        const color = trace.cyan ? CYAN : PURPLE
+
+        // Proximity glow: closest vertex to the cursor
+        let boost = 0
+        if (mouse.active) {
+          let minD = Infinity
+          for (const p of trace.points) {
+            const dx = p.x - mouse.x, dy = p.y - mouse.y
+            const d = Math.sqrt(dx * dx + dy * dy)
+            if (d < minD) minD = d
+          }
+          boost = Math.max(0, 1 - minD / MOUSE_GLOW)
+        }
+
+        // Trace line
+        ctx.beginPath()
+        trace.points.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)))
+        ctx.strokeStyle = `rgba(${color},${0.13 + boost * 0.55})`
+        ctx.lineWidth = 1 + boost * 1.2
+        ctx.lineJoin = 'round'
+        ctx.stroke()
+
+        // Via pads at vertices
+        trace.points.forEach((p) => {
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, 1.6 + boost * 1.2, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(${color},${0.25 + boost * 0.5})`
+          ctx.fill()
+        })
+
+        // Travelling packet with comet trail
+        const head = trace.phase + t * trace.speed
+        for (let k = 0; k < 5; k++) {
+          const pos = pointAt(trace, head - k * 9)
+          const alpha = (1 - k / 5) * (0.75 + boost * 0.25)
+          const r = k === 0 ? 3 : 1.6
+          if (k === 0) {
+            const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 10)
+            grad.addColorStop(0, `rgba(${color},${0.55 + boost * 0.3})`)
+            grad.addColorStop(1, 'transparent')
+            ctx.beginPath()
+            ctx.arc(pos.x, pos.y, 10, 0, Math.PI * 2)
+            ctx.fillStyle = grad
+            ctx.fill()
+          }
+          ctx.beginPath()
+          ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(${trace.cyan ? '165,243,252' : '216,180,254'},${alpha})`
+          ctx.fill()
+        }
       })
 
-      // Draw edges
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x
-          const dy = nodes[i].y - nodes[j].y
-          const d  = Math.sqrt(dx * dx + dy * dy)
-          if (d < LINK_DIST) {
-            const alpha = (1 - d / LINK_DIST) * 0.35
-            ctx.beginPath()
-            ctx.moveTo(nodes[i].x, nodes[i].y)
-            ctx.lineTo(nodes[j].x, nodes[j].y)
-            ctx.strokeStyle = `rgba(124,58,237,${alpha})`
-            ctx.lineWidth = 0.8
-            ctx.stroke()
-          }
-        }
-        // Mouse connections
-        const mdx = nodes[i].x - mouse.x
-        const mdy = nodes[i].y - mouse.y
-        const md  = Math.sqrt(mdx * mdx + mdy * mdy)
-        if (md < MOUSE_DIST) {
-          const alpha = (1 - md / MOUSE_DIST) * 0.7
-          ctx.beginPath()
-          ctx.moveTo(nodes[i].x, nodes[i].y)
-          ctx.lineTo(mouse.x, mouse.y)
-          ctx.strokeStyle = `rgba(56,189,248,${alpha})`
-          ctx.lineWidth = 1
-          ctx.stroke()
-        }
-      }
-
-      // Draw nodes
-      nodes.forEach(n => {
-        const pulse = 0.5 + 0.5 * Math.sin(n.pulse)
-        // Outer glow
-        const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4)
-        grad.addColorStop(0, `rgba(124,58,237,${0.4 * pulse})`)
+      // Soft cursor glow
+      if (mouse.active) {
+        const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_GLOW)
+        grad.addColorStop(0, 'rgba(6,182,212,0.05)')
         grad.addColorStop(1, 'transparent')
         ctx.beginPath()
-        ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2)
+        ctx.arc(mouse.x, mouse.y, MOUSE_GLOW, 0, Math.PI * 2)
         ctx.fillStyle = grad
         ctx.fill()
-        // Core dot
-        ctx.beginPath()
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(167,139,250,${0.6 + 0.4 * pulse})`
-        ctx.fill()
-      })
-
-      // Scan line
-      const scanY = (Math.sin(t * 0.4) * 0.5 + 0.5) * canvas.height
-      const scanGrad = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60)
-      scanGrad.addColorStop(0, 'transparent')
-      scanGrad.addColorStop(0.5, 'rgba(6,182,212,0.04)')
-      scanGrad.addColorStop(1, 'transparent')
-      ctx.fillStyle = scanGrad
-      ctx.fillRect(0, scanY - 60, canvas.width, 120)
+      }
 
       animId = requestAnimationFrame(draw)
     }
@@ -123,6 +185,7 @@ function TechCanvas() {
       cancelAnimationFrame(animId)
       window.removeEventListener('resize', resize)
       canvas.removeEventListener('mousemove', onMove)
+      canvas.removeEventListener('mouseleave', onLeave)
     }
   }, [])
 
@@ -137,11 +200,11 @@ function TechCanvas() {
       {/* Floating badges */}
       <div className="canvas-badge canvas-badge-1">
         <span className="canvas-badge-dot" />
-        <span>Network Active</span>
+        <span>Circuits Live</span>
       </div>
       <div className="canvas-badge canvas-badge-2">
         <span className="canvas-badge-dot cyan" />
-        <span>Systems Online</span>
+        <span>Data Flowing</span>
       </div>
     </div>
   )
@@ -231,22 +294,101 @@ function ServiceCard({ service, index }) {
   )
 }
 
+function WorkTeaser() {
+  const [ref, inView] = useInView()
+  const project = WORK_PROJECTS[0]
+  return (
+    <section className="services-section" style={{ paddingTop: 20 }}>
+      <div className="section-header" ref={ref}>
+        <div className={`section-tag${inView ? ' in-view' : ''}`}>Our Work</div>
+        <h2 className={`section-title${inView ? ' in-view' : ''}`}>
+          Real Businesses, <span className="gradient-text">Real Systems</span>
+        </h2>
+        <p className={`section-desc${inView ? ' in-view' : ''}`}>
+          See how we built a live e-commerce platform fully connected to our own TechnoPOS system.
+        </p>
+      </div>
+      <div
+        className={`work-card ${project.colorClass}${inView ? ' in-view' : ''}`}
+        style={{ maxWidth: 900, margin: '0 auto' }}
+      >
+        <div className="work-card-top">
+          <span className="work-tag">{project.tag}</span>
+          <h3 className="work-title">{project.title}</h3>
+          <a href={project.url} target="_blank" rel="noopener noreferrer" className="work-url">
+            {project.client} ↗
+          </a>
+        </div>
+        <p className="work-summary">{project.summary}</p>
+        <div className="work-stack">
+          {project.stack.map((s) => <span key={s} className="work-stack-pill">{s}</span>)}
+        </div>
+        <div className="card-actions">
+          <Link to="/work" className="card-btn-primary" style={{ textAlign: 'center' }}>View Case Study →</Link>
+          <a href={project.url} target="_blank" rel="noopener noreferrer" className="card-btn-ghost" style={{ textAlign: 'center' }}>
+            Visit Site →
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function StatItem({ s, i, inView }) {
+  const display = useCountUp(s.value, inView)
+  return (
+    <div className={`stat-item${inView ? ' in-view' : ''}`} style={{ transitionDelay: `${i * 0.1}s` }}>
+      <div className="stat-icon">{s.icon}</div>
+      <div className="stat-value">{display}</div>
+      <div className="stat-label">{s.label}</div>
+    </div>
+  )
+}
+
 function StatsSection() {
   const [ref, inView] = useInView()
   return (
     <section className="stats-section">
       <div className="stats-grid" ref={ref}>
-        {STATS.map((s, i) => (
-          <div key={s.label} className={`stat-item${inView ? ' in-view' : ''}`} style={{ transitionDelay: `${i * 0.1}s` }}>
-            <div className="stat-icon">{s.icon}</div>
-            <div className="stat-value">{s.value}</div>
-            <div className="stat-label">{s.label}</div>
-          </div>
-        ))}
+        {STATS.map((s, i) => <StatItem key={s.label} s={s} i={i} inView={inView} />)}
       </div>
     </section>
   )
 }
+
+// ── Capabilities ticker (infinite marquee) ────────────────────────────────────
+const TICKER_ITEMS = [
+  'IT & Computer Repair', 'Drone Servicing', 'CNC Design', 'TechnoPOS',
+  'InvoiceGen', 'ChairTime Booking', 'WiFi Setup', 'E-Commerce Integration',
+]
+function CapabilitiesTicker() {
+  const items = [...TICKER_ITEMS, ...TICKER_ITEMS]
+  return (
+    <div className="marquee-section">
+      <div className="marquee-track">
+        {items.map((item, i) => (
+          <span key={i} className="marquee-item">
+            {item} <span className="dot">●</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ── Closing kinetic tagline marquee ───────────────────────────────────────────
+function TaglineMarquee() {
+  const line = 'Real Solutions, Real Fast.  ✦  Technovia Cheltenham.  ✦  '
+  const items = Array(4).fill(line)
+  return (
+    <section className="tagline-marquee-section">
+      <div className="tagline-marquee-track">
+        {items.map((t, i) => <span key={i} className="tagline-marquee-item">{t}</span>)}
+      </div>
+    </section>
+  )
+}
+
 
 function ServicesSection() {
   const [ref, inView] = useInView()
@@ -306,6 +448,50 @@ function WhyUsSection() {
   )
 }
 
+function TestimonialCard({ t, index }) {
+  const [ref, inView] = useInView(0.1)
+  const initials = t.name.split(' ').map((w) => w[0]).join('')
+  return (
+    <div
+      ref={ref}
+      className={`testimonial-card${inView ? ' in-view' : ''}`}
+      style={{ transitionDelay: `${index * 0.12}s` }}
+    >
+      <div className="testimonial-quote-mark">"</div>
+      <p className="testimonial-quote">{t.quote}</p>
+      <div className="testimonial-author">
+        <div className="testimonial-avatar">{initials}</div>
+        <div>
+          <div className="testimonial-name">{t.name}</div>
+          <div className="testimonial-role">{t.role}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TestimonialsSection() {
+  const [ref, inView] = useInView()
+  return (
+    <section className="testimonials-section">
+      <div className="section-header" ref={ref}>
+        <div className={`section-tag${inView ? ' in-view' : ''}`}>What Our Clients Say</div>
+        <h2 className={`section-title${inView ? ' in-view' : ''}`}>
+          Trusted By <span className="gradient-text">Real People</span>
+        </h2>
+        <p className={`section-desc${inView ? ' in-view' : ''}`}>
+          Don't just take our word for it — here's what our customers have to say.
+        </p>
+      </div>
+      <div className="testimonials-grid">
+        {TESTIMONIALS.map((t, i) => (
+          <TestimonialCard key={t.name} t={t} index={i} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function CTASection() {
   const [ref, inView] = useInView()
   return (
@@ -324,8 +510,11 @@ function CTASection() {
   )
 }
 
+const ROTATING_WORDS = ['Laptops.', 'Drones.', 'CNC Jobs.', 'POS Systems.', 'Everything Tech.']
+
 function HeroSection() {
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
+  const [wordIndex, setWordIndex] = useState(0)
   useEffect(() => {
     const onMove = (e) => setMousePos({
       x: (e.clientX / window.innerWidth) * 100,
@@ -333,6 +522,10 @@ function HeroSection() {
     })
     window.addEventListener('mousemove', onMove)
     return () => window.removeEventListener('mousemove', onMove)
+  }, [])
+  useEffect(() => {
+    const id = setInterval(() => setWordIndex((i) => (i + 1) % ROTATING_WORDS.length), 2200)
+    return () => clearInterval(id)
   }, [])
 
   return (
@@ -347,9 +540,11 @@ function HeroSection() {
           IT Support, Drone Repair &amp; CNC Services in <span className="highlight">Cheltenham, VIC</span>
         </h1>
         <p className="hero-subtitle">
-          Technovia is Cheltenham's trusted tech specialist — laptop &amp; computer repair,
-          drone and battery servicing, WiFi setup, and CNC design. Same-day service,
-          honest pricing, no jargon.
+          Technovia is Cheltenham's trusted tech specialist, built for{' '}
+          <span className="rotating-word-wrap">
+            <span key={wordIndex} className="rotating-word">{ROTATING_WORDS[wordIndex]}</span>
+          </span>
+          {' '}Same-day service, honest pricing, no jargon.
         </p>
         <div className="hero-buttons">
           <Link to="/services" className="btn-primary">Explore Services</Link>
@@ -375,10 +570,14 @@ export default function Home() {
     <div className="page-wrapper">
       <Navbar />
       <HeroSection />
+      <CapabilitiesTicker />
       <StatsSection />
       <ServicesSection />
+      <WorkTeaser />
       <GalleryTeaser />
       <WhyUsSection />
+      <TestimonialsSection />
+      <TaglineMarquee />
       <CTASection />
       <Footer />
     </div>
