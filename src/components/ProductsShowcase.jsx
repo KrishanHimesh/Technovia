@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion'
 import { PRODUCTS } from '../index.js'
+import AppMockScreen from './AppMockScreens.jsx'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -23,17 +24,7 @@ function ProductMock({ product }) {
         <div className="product-mock-url">{product.url.replace('https://', '')}</div>
       </div>
       <div className="product-mock-screen">
-        <div className="product-mock-glow" />
-        <div className="product-mock-dash">
-          <div className="product-mock-dash-icon">{product.icon}</div>
-          <div className="product-mock-dash-bars">
-            <span style={{ height: '60%' }} />
-            <span style={{ height: '85%' }} />
-            <span style={{ height: '45%' }} />
-            <span style={{ height: '70%' }} />
-            <span style={{ height: '95%' }} />
-          </div>
-        </div>
+        <AppMockScreen id={product.id} />
       </div>
       <div className="product-mock-body">
         <div className="product-mock-name">{product.label}</div>

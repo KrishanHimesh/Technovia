@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import Navbar from '../components/Navbar.jsx'
 import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
+import AppMockScreen from '../components/AppMockScreens.jsx'
 import { useInView, usePageMeta, useJsonLd, PRODUCTS } from '../index.js'
 
 const APPS = PRODUCTS
@@ -24,9 +25,9 @@ function AppCard({ app, index }) {
       <div className={`app-card-mock ${app.colorClass}`}>
         <div className="app-card-mock-chrome">
           <span /><span /><span />
+          <span className="app-card-mock-icon-sm">{app.icon}</span>
         </div>
-        <div className="app-card-mock-glow" />
-        <div className="app-card-mock-icon">{app.icon}</div>
+        <AppMockScreen id={app.id} />
       </div>
       <div
         className="card-body"

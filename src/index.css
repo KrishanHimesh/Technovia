@@ -1102,21 +1102,13 @@ body.has-custom-cursor a, body.has-custom-cursor button { cursor: none; }
 }
 .product-mock-body { padding: 32px 32px 40px; }
 .product-mock-screen {
-  position: relative; height: 200px; overflow: hidden;
+  position: relative; height: 220px; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
+  padding: 18px;
 }
-.color-purple .product-mock-screen { background: linear-gradient(135deg, rgba(124,58,237,0.28), rgba(8,8,20,0.92)); }
-.color-cyan   .product-mock-screen { background: linear-gradient(135deg, rgba(6,182,212,0.28), rgba(8,8,20,0.92)); }
-.color-green  .product-mock-screen { background: linear-gradient(135deg, rgba(16,185,129,0.28), rgba(8,8,20,0.92)); }
-.product-mock-glow {
-  position: absolute; width: 220px; height: 220px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
-  filter: blur(12px);
-}
-.product-mock-dash { position: relative; display: flex; align-items: center; gap: 22px; }
-.product-mock-dash-icon { font-size: 40px; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.4)); }
-.product-mock-dash-bars { display: flex; align-items: flex-end; gap: 6px; height: 56px; }
-.product-mock-dash-bars span { display: block; width: 8px; border-radius: 3px 3px 0 0; background: rgba(255,255,255,0.55); }
+.color-purple .product-mock-screen { background: linear-gradient(135deg, rgba(124,58,237,0.22), rgba(8,8,20,0.94)); }
+.color-cyan   .product-mock-screen { background: linear-gradient(135deg, rgba(6,182,212,0.22), rgba(8,8,20,0.94)); }
+.color-green  .product-mock-screen { background: linear-gradient(135deg, rgba(16,185,129,0.22), rgba(8,8,20,0.94)); }
 .product-mock-name { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 18px; }
 .color-purple.product-mock .product-mock-name { color: var(--purple-lite); }
 .color-cyan.product-mock   .product-mock-name { color: var(--cyan-lite); }
@@ -1233,24 +1225,20 @@ body.has-custom-cursor a, body.has-custom-cursor button { cursor: none; }
    Apps page — abstract mock header (replaces stock photo) + compact CTA
    ───────────────────────────────────────────────────────────────────────── */
 .app-card-mock {
-  height: 160px; position: relative; overflow: hidden; flex-shrink: 0;
+  height: 200px; position: relative; overflow: hidden; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
+  padding: 40px 18px 14px;
 }
-.app-card-mock.color-purple { background: linear-gradient(135deg, rgba(124,58,237,0.28), rgba(8,8,20,0.9)); }
-.app-card-mock.color-cyan   { background: linear-gradient(135deg, rgba(6,182,212,0.28), rgba(8,8,20,0.9)); }
-.app-card-mock.color-green  { background: linear-gradient(135deg, rgba(16,185,129,0.28), rgba(8,8,20,0.9)); }
+.app-card-mock.color-purple { background: linear-gradient(135deg, rgba(124,58,237,0.22), rgba(8,8,20,0.94)); }
+.app-card-mock.color-cyan   { background: linear-gradient(135deg, rgba(6,182,212,0.22), rgba(8,8,20,0.94)); }
+.app-card-mock.color-green  { background: linear-gradient(135deg, rgba(16,185,129,0.22), rgba(8,8,20,0.94)); }
 .app-card-mock-chrome {
-  position: absolute; top: 0; left: 0; right: 0;
-  display: flex; gap: 6px; padding: 12px 16px;
+  position: absolute; top: 0; left: 0; right: 0; z-index: 1;
+  display: flex; align-items: center; gap: 6px; padding: 12px 16px;
   background: rgba(0,0,0,0.15); border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.app-card-mock-chrome span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.18); }
-.app-card-mock-glow {
-  position: absolute; width: 180px; height: 180px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%);
-  filter: blur(10px);
-}
-.app-card-mock-icon { position: relative; font-size: 46px; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.4)); }
+.app-card-mock-chrome span:not(.app-card-mock-icon-sm) { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+.app-card-mock-icon-sm { margin-left: auto; font-size: 15px; opacity: 0.8; }
 
 .app-card-cta {
   display: inline-flex; align-items: center; gap: 8px;
@@ -1261,4 +1249,51 @@ body.has-custom-cursor a, body.has-custom-cursor button { cursor: none; }
 .color-purple .app-card-cta { background: linear-gradient(135deg,var(--purple),rgba(124,58,237,0.75)); box-shadow: 0 0 18px rgba(124,58,237,0.3); }
 .color-cyan   .app-card-cta { background: linear-gradient(135deg,var(--cyan),rgba(6,182,212,0.75));   box-shadow: 0 0 18px rgba(6,182,212,0.3); }
 .color-green  .app-card-cta { background: linear-gradient(135deg,var(--green),rgba(16,185,129,0.75)); box-shadow: 0 0 18px rgba(16,185,129,0.3); }
+
+/* ── Mockup UI screenshots (TechnoPOS / ChairTime / InvoiceGen / WFHly) ────── */
+.mockui { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 10px; font-family: 'DM Sans', sans-serif; }
+
+.mockui-chips { display: flex; gap: 8px; }
+.mockui-chip {
+  flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 6px 9px; display: flex; flex-direction: column; gap: 2px;
+}
+.mockui-chip-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.4); }
+.mockui-chip-value { font-size: 13px; font-weight: 700; color: #fff; }
+
+.mockui-bars { display: flex; align-items: flex-end; gap: 5px; height: 44px; flex: 1; }
+.mockui-bars span { flex: 1; border-radius: 3px 3px 0 0; background: rgba(255,255,255,0.5); }
+.mockui-bars-week span { background: rgba(255,255,255,0.45); }
+
+.mockui-rows { display: flex; flex-direction: column; gap: 6px; }
+.mockui-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.04); border-radius: 6px; padding: 5px 8px;
+}
+.mockui-row span:nth-child(2) { flex: 1; }
+.mockui-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.5); flex-shrink: 0; }
+.mockui-row-val { font-weight: 700; color: #fff; }
+.mockui-avatar { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.3); flex-shrink: 0; }
+.mockui-tag {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 2px 6px; border-radius: 100px; background: rgba(16,185,129,0.25); color: #6ee7b7;
+}
+
+.mockui-cal {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; height: 44px;
+}
+.mockui-cal span { border-radius: 3px; background: rgba(255,255,255,0.08); }
+.mockui-cal-today { background: rgba(255,255,255,0.85) !important; }
+
+.mockui-invoice-head { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: #fff; letter-spacing: 0.02em; }
+.mockui-badge {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 5px;
+  background: rgba(16,185,129,0.25); color: #6ee7b7; transform: rotate(-4deg);
+}
+.mockui-invoice-lines { display: flex; flex-direction: column; gap: 6px; flex: 1; justify-content: center; }
+.mockui-invoice-line { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.65); border-bottom: 1px dashed rgba(255,255,255,0.08); padding-bottom: 5px; }
+.mockui-invoice-total { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; color: #fff; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.15); }
+
+.mockui-timer { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 800; color: #fff; text-align: center; letter-spacing: 0.03em; }
 .app-card-cta:hover { transform: translateY(-2px); }
