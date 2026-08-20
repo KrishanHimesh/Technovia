@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import Navbar from '../components/Navbar.jsx'
+import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView } from '../index.js'
+import { useInView, usePageMeta } from '../index.js'
 
 // Remember to update these with your actual EmailJS dashboard credentials!
 const EMAILJS_SERVICE_ID  = 'service_ffwavkv'        // ✅ your Gmail service
@@ -196,10 +197,16 @@ function ContactInfo() {
 }
 
 export default function Contact() {
+  usePageMeta(
+    'Contact Technovia | IT, Drone & CNC Support — Cheltenham, VIC',
+    'Get in touch with Technovia for IT support, drone repair, or CNC services in Cheltenham, VIC. Call 0476 593 934 or send an enquiry online.',
+    '/contact'
+  )
   return (
     <div className="page-wrapper">
       <Navbar />
       <div className="page-hero">
+        <AnimatedBackdrop variant="purple" />
         <div className="page-hero-grid" />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h1>Contact <span className="gradient-text">Us</span></h1>

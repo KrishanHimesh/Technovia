@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar.jsx'
+import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView } from '../index.js'
+import { useInView, usePageMeta } from '../index.js'
 
 // ── Real work photo data ──────────────────────────────────────────────────────
 // Replace src values with your own photos (drop them in /public/gallery/)
@@ -114,6 +115,11 @@ function GalleryCard({ item, index }) {
 import React, { useState } from 'react'
 
 export default function Gallery() {
+  usePageMeta(
+    'Repair Gallery | Technovia — Cheltenham, VIC',
+    'Real drone repair, battery service, and frame-fix photos from Technovia in Cheltenham, VIC — see the quality of our work before you book.',
+    '/gallery'
+  )
   const [activeTab, setActiveTab] = useState('all')
   const filtered = activeTab === 'all'
     ? GALLERY_ITEMS
@@ -124,6 +130,7 @@ export default function Gallery() {
       <Navbar />
 
       <div className="page-hero">
+        <AnimatedBackdrop variant="cyan" />
         <div className="page-hero-grid" />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h1>Our <span className="gradient-text">Work Gallery</span></h1>

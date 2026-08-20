@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
+import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
 import { useInView, ABOUT_VALUES, STATS, usePageMeta } from '../index.js'
 
@@ -112,12 +113,14 @@ function CTAStrip() {
 export default function About() {
   usePageMeta(
     'About Technovia – Local Tech Experts in Cheltenham, VIC',
-    'Learn about Technovia — Cheltenham\'s trusted IT support, drone repair, and CNC specialists. Fast, honest, local. Call 0476 593 934.'
+    'Learn about Technovia — Cheltenham\'s trusted IT support, drone repair, and CNC specialists. Fast, honest, local. Call 0476 593 934.',
+    '/about'
   )
   return (
     <div className="page-wrapper">
       <Navbar />
       <div className="page-hero">
+        <AnimatedBackdrop variant="purple" />
         <div className="page-hero-grid" />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h1>About <span className="gradient-text">Technovia</span></h1>

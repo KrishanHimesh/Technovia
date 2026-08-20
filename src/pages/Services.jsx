@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
+import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, usePageMeta } from '../index.js'
+import { useInView, usePageMeta, useJsonLd } from '../index.js'
 
 /* ─── All service data from the skeleton ─────────────────────────────────── */
 const IT_SUBSECTIONS = [
@@ -170,7 +171,7 @@ function SubCard({ sub, index }) {
 }
 
 /* ─── Service category block ────────────────────────────────────────────── */
-function ServiceCategory({ id, title, colorClass, heroImg, heroAlt, intro, subsections, accent }) {
+function ServiceCategory({ id, title, colorClass, heroImg, intro, subsections, accent }) {
   const [ref, inView] = useInView(0.1)
   return (
     <section id={id} className={`service-cat-section`}>
@@ -245,13 +246,26 @@ function ServiceTabs() {
 export default function Services() {
   usePageMeta(
     'IT Support, Drone Repair & CNC Services – Technovia Cheltenham VIC',
-    'Full list of Technovia services: computer repair, drone motor & battery repair, WiFi setup, CNC design and programming. Cheltenham, VIC. Call 0476 593 934.'
+    'Full list of Technovia services: computer repair, drone motor & battery repair, WiFi setup, CNC design and programming. Cheltenham, VIC. Call 0476 593 934.',
+    '/services'
   )
+
+  useJsonLd(useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, item: { '@type': 'Service', name: 'IT Support & Repairs', provider: { '@type': 'LocalBusiness', name: 'Technovia' }, areaServed: 'Cheltenham, VIC' } },
+      { '@type': 'ListItem', position: 2, item: { '@type': 'Service', name: 'Drone Repair & Services', provider: { '@type': 'LocalBusiness', name: 'Technovia' }, areaServed: 'Cheltenham, VIC' } },
+      { '@type': 'ListItem', position: 3, item: { '@type': 'Service', name: 'CNC Programming & Designing', provider: { '@type': 'LocalBusiness', name: 'Technovia' }, areaServed: 'Cheltenham, VIC' } },
+    ],
+  }), []))
+
   return (
     <div className="page-wrapper">
       <Navbar />
 
       <div className="page-hero">
+        <AnimatedBackdrop variant="purple" />
         <div className="page-hero-grid" />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h1>Our <span className="gradient-text">Services</span></h1>

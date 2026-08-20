@@ -14,8 +14,14 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    setMenuOpen(false)
     window.scrollTo(0, 0)
+  }, [location.pathname])
+
+  // Reset the mobile menu on navigation. This is a deliberate UI-reset-on-route-change
+  // effect (not derived state), so the set-state-in-effect rule is intentionally relaxed here.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMenuOpen(false)
   }, [location.pathname])
 
   useEffect(() => {
@@ -45,6 +51,10 @@ export default function Navbar() {
             </NavLink>
           ))}
         </div>
+
+        <NavLink to="/contact" className="nav-cta">
+          Start a Project <span aria-hidden="true">↗</span>
+        </NavLink>
 
         {/* Hamburger — visible on mobile */}
         <button

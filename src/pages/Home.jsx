@@ -1,215 +1,15 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
+import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, useCountUp, SERVICES, STATS, WHY_FEATURES, WORK_PROJECTS, TESTIMONIALS } from '../index.js'
+import Statement from '../components/Statement.jsx'
+import ProductsShowcase from '../components/ProductsShowcase.jsx'
+import ProcessSection from '../components/ProcessSection.jsx'
+import ServicesInteractive from '../components/ServicesInteractive.jsx'
+import HeroDashboard from '../components/HeroDashboard.jsx'
+import { useInView, useCountUp, STATS, WHY_FEATURES, WORK_PROJECTS, TESTIMONIALS, usePageMeta } from '../index.js'
 //prod
-// ── Animated Circuit Pulse Hero ────────────────────────────────────────────────
-// Procedurally generated PCB-style circuit traces (orthogonal paths) with glowing
-// data packets travelling along them, brightening near the cursor.
-function buildTrace(startGx, startGy, cols, rows) {
-  let dir = [{ x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }][Math.floor(Math.random() * 4)]
-  let gx = startGx, gy = startGy
-  const pts = [{ x: gx, y: gy }]
-  const segments = 5 + Math.floor(Math.random() * 6)
-
-  for (let s = 0; s < segments; s++) {
-    const stepLen = 1 + Math.floor(Math.random() * 4)
-    gx += dir.x * stepLen
-    gy += dir.y * stepLen
-
-    let bounced = false
-    if (gx < 1) { gx = 1; bounced = true }
-    if (gx > cols - 1) { gx = cols - 1; bounced = true }
-    if (gy < 1) { gy = 1; bounced = true }
-    if (gy > rows - 1) { gy = rows - 1; bounced = true }
-
-    pts.push({ x: gx, y: gy })
-
-    if (bounced || Math.random() < 0.65) {
-      dir = dir.x !== 0
-        ? { x: 0, y: Math.random() < 0.5 ? 1 : -1 }
-        : { x: Math.random() < 0.5 ? 1 : -1, y: 0 }
-    }
-  }
-  return pts
-}
-
-function makeTraces(width, height) {
-  const grid = Math.max(22, Math.min(width, height) / 13)
-  const cols = Math.max(4, Math.floor(width / grid))
-  const rows = Math.max(4, Math.floor(height / grid))
-  const count = Math.min(26, Math.max(12, Math.floor((cols * rows) / 22)))
-
-  return Array.from({ length: count }, (_, i) => {
-    const startGx = 1 + Math.floor(Math.random() * (cols - 2))
-    const startGy = 1 + Math.floor(Math.random() * (rows - 2))
-    const gridPts = buildTrace(startGx, startGy, cols, rows)
-    const points = gridPts.map((p) => ({ x: p.x * grid, y: p.y * grid }))
-
-    let total = 0
-    const cum = [0]
-    for (let j = 1; j < points.length; j++) {
-      const dx = points[j].x - points[j - 1].x
-      const dy = points[j].y - points[j - 1].y
-      total += Math.sqrt(dx * dx + dy * dy)
-      cum.push(total)
-    }
-
-    return {
-      points, cum, total,
-      cyan: i % 2 === 0,
-      speed: total / (4 + Math.random() * 6) / 60, // px per frame
-      phase: Math.random() * (total || 1),
-    }
-  })
-}
-
-function pointAt(trace, dist) {
-  const { points, cum, total } = trace
-  if (total === 0) return points[0]
-  const d = ((dist % total) + total) % total
-  let seg = 1
-  while (seg < cum.length && cum[seg] < d) seg++
-  seg = Math.min(seg, points.length - 1)
-  const segStart = cum[seg - 1], segEnd = cum[seg]
-  const t = segEnd > segStart ? (d - segStart) / (segEnd - segStart) : 0
-  const a = points[seg - 1], b = points[seg]
-  return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }
-}
-
-function TechCanvas() {
-  const canvasRef = useRef(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    let animId, traces
-
-    const resize = () => {
-      canvas.width  = canvas.offsetWidth
-      canvas.height = canvas.offsetHeight
-      traces = makeTraces(canvas.width, canvas.height)
-    }
-    resize()
-    window.addEventListener('resize', resize)
-
-    let mouse = { x: canvas.width / 2, y: canvas.height / 2, active: false }
-    const onMove = (e) => {
-      const rect = canvas.getBoundingClientRect()
-      mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top, active: true }
-    }
-    const onLeave = () => { mouse.active = false }
-    canvas.addEventListener('mousemove', onMove)
-    canvas.addEventListener('mouseleave', onLeave)
-
-    let t = 0
-    const PURPLE = '124,58,237'
-    const CYAN   = '6,182,212'
-    const MOUSE_GLOW = 170
-
-    const draw = () => {
-      t += 1
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      traces.forEach((trace) => {
-        const color = trace.cyan ? CYAN : PURPLE
-
-        // Proximity glow: closest vertex to the cursor
-        let boost = 0
-        if (mouse.active) {
-          let minD = Infinity
-          for (const p of trace.points) {
-            const dx = p.x - mouse.x, dy = p.y - mouse.y
-            const d = Math.sqrt(dx * dx + dy * dy)
-            if (d < minD) minD = d
-          }
-          boost = Math.max(0, 1 - minD / MOUSE_GLOW)
-        }
-
-        // Trace line
-        ctx.beginPath()
-        trace.points.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)))
-        ctx.strokeStyle = `rgba(${color},${0.13 + boost * 0.55})`
-        ctx.lineWidth = 1 + boost * 1.2
-        ctx.lineJoin = 'round'
-        ctx.stroke()
-
-        // Via pads at vertices
-        trace.points.forEach((p) => {
-          ctx.beginPath()
-          ctx.arc(p.x, p.y, 1.6 + boost * 1.2, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(${color},${0.25 + boost * 0.5})`
-          ctx.fill()
-        })
-
-        // Travelling packet with comet trail
-        const head = trace.phase + t * trace.speed
-        for (let k = 0; k < 5; k++) {
-          const pos = pointAt(trace, head - k * 9)
-          const alpha = (1 - k / 5) * (0.75 + boost * 0.25)
-          const r = k === 0 ? 3 : 1.6
-          if (k === 0) {
-            const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 10)
-            grad.addColorStop(0, `rgba(${color},${0.55 + boost * 0.3})`)
-            grad.addColorStop(1, 'transparent')
-            ctx.beginPath()
-            ctx.arc(pos.x, pos.y, 10, 0, Math.PI * 2)
-            ctx.fillStyle = grad
-            ctx.fill()
-          }
-          ctx.beginPath()
-          ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(${trace.cyan ? '165,243,252' : '216,180,254'},${alpha})`
-          ctx.fill()
-        }
-      })
-
-      // Soft cursor glow
-      if (mouse.active) {
-        const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_GLOW)
-        grad.addColorStop(0, 'rgba(6,182,212,0.05)')
-        grad.addColorStop(1, 'transparent')
-        ctx.beginPath()
-        ctx.arc(mouse.x, mouse.y, MOUSE_GLOW, 0, Math.PI * 2)
-        ctx.fillStyle = grad
-        ctx.fill()
-      }
-
-      animId = requestAnimationFrame(draw)
-    }
-    draw()
-
-    return () => {
-      cancelAnimationFrame(animId)
-      window.removeEventListener('resize', resize)
-      canvas.removeEventListener('mousemove', onMove)
-      canvas.removeEventListener('mouseleave', onLeave)
-    }
-  }, [])
-
-  return (
-    <div className="tech-canvas-wrap">
-      <canvas ref={canvasRef} className="tech-canvas" />
-      {/* Corner decorations */}
-      <div className="canvas-corner canvas-corner-tl" />
-      <div className="canvas-corner canvas-corner-tr" />
-      <div className="canvas-corner canvas-corner-bl" />
-      <div className="canvas-corner canvas-corner-br" />
-      {/* Floating badges */}
-      <div className="canvas-badge canvas-badge-1">
-        <span className="canvas-badge-dot" />
-        <span>Circuits Live</span>
-      </div>
-      <div className="canvas-badge canvas-badge-2">
-        <span className="canvas-badge-dot cyan" />
-        <span>Data Flowing</span>
-      </div>
-    </div>
-  )
-}
-
 // ── Gallery Teaser ────────────────────────────────────────────────────────────
 const TEASER_PHOTOS = [
   { src: '/gallery/drone-repair-1.jpeg',   alt: 'Drone repair Cheltenham',          icon: '🔧', label: 'Drone Repair'      },
@@ -265,35 +65,6 @@ function GalleryTeaserCard({ photo, index }) {
 }
 
 
-function ServiceCard({ service, index }) {
-  const [ref, inView] = useInView()
-  return (
-    <div
-      ref={ref}
-      className={`service-card ${service.colorClass}${inView ? ' in-view' : ''}`}
-      style={{ transitionDelay: `${index * 0.15}s` }}
-    >
-      <div className="card-image-wrap">
-        <img src={service.image} alt={service.title} loading="lazy" />
-        <div className="card-image-overlay" />
-        <div className="card-icon-badge">{service.icon}</div>
-      </div>
-      <div className="card-body">
-        <h3 className="card-title">{service.title}</h3>
-        <ul className="card-list">
-          {service.items.map((item) => (
-            <li key={item}><span className="card-list-dot">◆</span>{item}</li>
-          ))}
-        </ul>
-        <div className="card-actions">
-          <Link to="/contact" className="card-btn-ghost" style={{ textAlign: 'center' }}>Contact Us</Link>
-          <Link to="/services" className="card-btn-primary" style={{ textAlign: 'center' }}>More Info →</Link>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function WorkTeaser() {
   const [ref, inView] = useInView()
   const project = WORK_PROJECTS[0]
@@ -310,6 +81,7 @@ function WorkTeaser() {
       </div>
       <div
         className={`work-card ${project.colorClass}${inView ? ' in-view' : ''}`}
+      data-cursor="VIEW"
         style={{ maxWidth: 900, margin: '0 auto' }}
       >
         <div className="work-card-top">
@@ -389,26 +161,6 @@ function TaglineMarquee() {
   )
 }
 
-
-function ServicesSection() {
-  const [ref, inView] = useInView()
-  return (
-    <section className="services-section">
-      <div className="section-header" ref={ref}>
-        <div className={`section-tag${inView ? ' in-view' : ''}`}>What We Offer</div>
-        <h2 className={`section-title${inView ? ' in-view' : ''}`}>
-          Our <span className="gradient-text">Premium</span> Services
-        </h2>
-        <p className={`section-desc${inView ? ' in-view' : ''}`}>
-          Expert solutions for IT, drones, and CNC — delivered with precision and care.
-        </p>
-      </div>
-      <div className="services-grid">
-        {SERVICES.map((s, i) => <ServiceCard key={s.id} service={s} index={i} />)}
-      </div>
-    </section>
-  )
-}
 
 function WhyUsSection() {
   const [ref, inView] = useInView()
@@ -530,6 +282,7 @@ function HeroSection() {
 
   return (
     <section className="hero" style={{ background: `radial-gradient(ellipse at ${mousePos.x}% ${mousePos.y}%, rgba(124,58,237,0.22) 0%, rgba(6,182,212,0.1) 40%, #080814 70%)` }}>
+      <AnimatedBackdrop variant="purple" density={1.2} />
       <div className="hero-grid-bg" />
       <div className="hero-orb hero-orb-1" />
       <div className="hero-orb hero-orb-2" />
@@ -551,9 +304,9 @@ function HeroSection() {
           <Link to="/contact"  className="btn-ghost">Contact Us →</Link>
         </div>
 
-        {/* CSS animated tech canvas replaces the hero image */}
+        {/* Premium live-status dashboard — click between services */}
         <div className="hero-image-wrap" style={{ marginTop: 56 }}>
-          <TechCanvas />
+          <HeroDashboard />
         </div>
       </div>
 
@@ -566,16 +319,24 @@ function HeroSection() {
 }
 
 export default function Home() {
+  usePageMeta(
+    'Technovia | IT Support, Drone Repair & CNC Services — Cheltenham, VIC',
+    'Technovia is Cheltenham\'s trusted tech specialist — IT support, drone repair, CNC programming, plus TechnoPOS, ChairTime, InvoiceGen & WFHly. Same-day service, honest pricing.',
+    '/'
+  )
   return (
     <div className="page-wrapper">
       <Navbar />
       <HeroSection />
       <CapabilitiesTicker />
       <StatsSection />
-      <ServicesSection />
+      <Statement />
+      <ServicesInteractive />
+      <ProductsShowcase />
       <WorkTeaser />
       <GalleryTeaser />
       <WhyUsSection />
+      <ProcessSection />
       <TestimonialsSection />
       <TaglineMarquee />
       <CTASection />

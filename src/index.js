@@ -176,13 +176,138 @@ export function useCountUp(value, active, duration = 1400) {
   return display
 }
 
-export function usePageMeta(title, description) {
+export function usePageMeta(title, description, path = '') {
   useEffect(() => {
     document.title = title
-    let desc = document.querySelector('meta[name="description"]')
-    if (desc) desc.setAttribute('content', description)
-  }, [title, description])
+
+    const setMeta = (attr, key, content) => {
+      let el = document.querySelector(`meta[${attr}="${key}"]`)
+      if (!el) {
+        el = document.createElement('meta')
+        el.setAttribute(attr, key)
+        document.head.appendChild(el)
+      }
+      el.setAttribute('content', content)
+    }
+
+    setMeta('name', 'description', description)
+    setMeta('property', 'og:title', title)
+    setMeta('property', 'og:description', description)
+    setMeta('name', 'twitter:title', title)
+    setMeta('name', 'twitter:description', description)
+
+    const url = `https://www.technovia.com.au${path}`
+    setMeta('property', 'og:url', url)
+
+    let canonical = document.querySelector('link[rel="canonical"]')
+    if (!canonical) {
+      canonical = document.createElement('link')
+      canonical.setAttribute('rel', 'canonical')
+      document.head.appendChild(canonical)
+    }
+    canonical.setAttribute('href', url)
+  }, [title, description, path])
 }
+
+/**
+ * useJsonLd(schema)
+ * Injects a JSON-LD <script> block into <head> for the current page and
+ * cleans it up on unmount/route change — used for page-specific structured
+ * data (Service, SoftwareApplication, BreadcrumbList) beyond the site-wide
+ * Organization/WebSite schema already in index.html.
+ */
+export function useJsonLd(schema) {
+  useEffect(() => {
+    if (!schema) return
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.text = JSON.stringify(schema)
+    script.dataset.dynamicJsonLd = 'true'
+    document.head.appendChild(script)
+    return () => { document.head.removeChild(script) }
+  }, [schema])
+}
+
+// ── Products (Technovia's own software apps) ─────────────────────────────────
+export const PRODUCTS = [
+  {
+    id: 'app',
+    label: 'TechnoPOS',
+    tagline: 'Retail & business management platform',
+    icon: '🖥️',
+    image: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=900&q=80',
+    url: 'https://app.technovia.com.au',
+    colorClass: 'color-purple',
+    desc: 'Manage inventory, sales, customers and reporting from one central platform — built for real retail floors, not spreadsheets.',
+    tags: ['POS', 'Inventory', 'Customers', 'Reports'],
+    features: [
+      'Manage inventory and stock levels',
+      'Track sales, orders, and transactions',
+      'Access real-time business reports',
+      'Manage customers and supplier records',
+    ],
+  },
+  {
+    id: 'booking',
+    label: 'ChairTime',
+    tagline: 'Smart booking & appointment management',
+    icon: '📅',
+    image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=900&q=80',
+    url: 'https://booking.technovia.com.au',
+    colorClass: 'color-cyan',
+    desc: 'Let clients book, reschedule and manage appointments online, any time — while you manage staff schedules from one calendar.',
+    tags: ['Booking', 'Scheduling', 'Reminders'],
+    features: [
+      'Online appointment booking 24/7',
+      'Manage staff schedules & availability',
+      'Automatic booking confirmations & reminders',
+      'Reduce no-shows with easy rescheduling',
+    ],
+  },
+  {
+    id: 'invoice',
+    label: 'InvoiceGen',
+    tagline: 'Fast, professional invoicing',
+    icon: '🧾',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=900&q=80',
+    url: 'https://invoice.technovia.com.au',
+    colorClass: 'color-green',
+    desc: 'Create, send and track professional invoices in seconds — accessible securely from anywhere, on any device.',
+    tags: ['Invoicing', 'PDF Export', 'Client Records'],
+    features: [
+      'Create and send professional invoices',
+      'Download PDF invoices instantly',
+      'Save client details for faster invoicing',
+      'Track invoice status and records',
+    ],
+  },
+  {
+    id: 'wfh',
+    label: 'WFHly',
+    tagline: 'Work-from-home tracking & expenses',
+    icon: '🏠',
+    image: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=900&q=80',
+    url: 'https://wfh.technovia.com.au',
+    colorClass: 'color-purple',
+    desc: 'Track work-from-home hours and expenses in one simple dashboard — built for freelancers, remote teams, and small business owners doing their own books.',
+    tags: ['Time Tracking', 'Expenses', 'Reports'],
+    features: [
+      'Log work-from-home hours quickly',
+      'Track and categorise WFH expenses',
+      'Generate simple summary reports',
+      'Access your data from any device',
+    ],
+  },
+]
+
+// ── Process ────────────────────────────────────────────────────────────────────
+export const PROCESS_STEPS = [
+  { n: '01', title: 'Discover', desc: 'Understand the problem, the business and what a good outcome actually looks like.' },
+  { n: '02', title: 'Diagnose / Design', desc: 'Plan the right fix or build — no upselling, no guesswork.' },
+  { n: '03', title: 'Build / Repair', desc: 'Do the work properly, with the right parts and the right process.' },
+  { n: '04', title: 'Test', desc: 'Check it thoroughly before it goes back to you.' },
+  { n: '05', title: 'Support', desc: "Stick around after — if something's not right, we fix it." },
+]
 
 // ── Testimonials ──────────────────────────────────────────────────────────────
 export const TESTIMONIALS = [

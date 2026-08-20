@@ -1,60 +1,10 @@
+import { useMemo } from 'react'
 import Navbar from '../components/Navbar.jsx'
+import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, usePageMeta } from '../index.js'
+import { useInView, usePageMeta, useJsonLd, PRODUCTS } from '../index.js'
 
-const APPS = [
-  {
-    id: 'app',
-    label: 'TechnoPOS',
-    icon: '🖥️',
-    url: 'https://app.technovia.com.au',
-    colorClass: 'color-purple',
-    desc: 'Access the Technovia Business Portal — manage inventory, sales, customers, reporting, and all your business operations from one central platform.',
-
-    features: [
-      'Manage inventory and stock levels',
-      'Track sales, orders, and transactions',
-      'Access real-time business reports',
-      'Manage customers and supplier records',
-      'Business performance dashboards',
-      'Secure access from anywhere, anytime'
-    ],
-  },
-  {
-    id: 'invoice',
-    label: 'InvoiceGen',
-    icon: '🧾',
-    url: 'https://invoice.technovia.com.au',
-    colorClass: 'color-cyan',
-    desc: 'Create, manage, and download professional invoices online — fast, secure, and accessible from anywhere.',
-
-    features: [
-     'Create and send professional invoices',
-     'View and manage invoice history',
-     'Download PDF invoices instantly',
-     'Save client details for faster invoicing',
-     'Track invoice status and records',
-     'Access your invoices anytime, anywhere'
-   ],
-  },
-  {
-    id: 'booking',
-    label: 'ChairTime',
-    icon: '📅',
-    url: 'https://booking.technovia.com.au',
-    colorClass: 'color-green',
-    desc: 'Online appointment booking made simple — let clients book, reschedule, and manage appointments anytime.',
-
-    features: [
-      'Online appointment booking 24/7',
-      'Manage staff schedules & availability',
-      'Automatic booking confirmations & reminders',
-      'Client history and appointment records',
-      'Reduce no-shows with easy rescheduling',
-      'Access your calendar from any device'
-    ],
-  },
-]
+const APPS = PRODUCTS
 
 function AppCard({ app, index }) {
   const [ref, inView] = useInView(0.1)
@@ -69,11 +19,19 @@ function AppCard({ app, index }) {
         display: 'flex',
         flexDirection: 'column',
       }}
+      data-cursor="OPEN"
     >
+      <div className={`app-card-mock ${app.colorClass}`}>
+        <div className="app-card-mock-chrome">
+          <span /><span /><span />
+        </div>
+        <div className="app-card-mock-glow" />
+        <div className="app-card-mock-icon">{app.icon}</div>
+      </div>
       <div
         className="card-body"
         style={{
-          padding: '2.5rem 2rem',
+          padding: '2rem 2rem 2.25rem',
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
@@ -81,9 +39,9 @@ function AppCard({ app, index }) {
           alignItems: 'center'
         }}
       >
-        <div style={{ fontSize: 48, marginBottom: 12 }}>{app.icon}</div>
-        <h3 className="card-title" style={{ fontSize: '2rem', marginBottom: 12 }}>{app.label}</h3>
-        <ul className="card-list" style={{ marginBottom: 28, flex: 1 }}>
+        <h3 className="card-title" style={{ fontSize: '1.6rem', marginBottom: 4 }}>{app.label}</h3>
+        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, marginBottom: 18, textAlign: 'center' }}>{app.tagline}</p>
+        <ul className="card-list" style={{ marginBottom: 24, flex: 1 }}>
           {app.features.map((f) => (
             <li key={f}><span className="card-list-dot">◆</span>{f}</li>
           ))}
@@ -92,16 +50,9 @@ function AppCard({ app, index }) {
           href={app.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="card-btn-primary"
-          style={{
-            display: 'block',
-            textAlign: 'center',
-            width: '100%',
-            boxSizing: 'border-box',
-            marginTop: 'auto',
-          }}
+          className="app-card-cta"
         >
-          Open {app.label} →
+          Open {app.label} <span aria-hidden="true">→</span>
         </a>
       </div>
     </div>
@@ -110,9 +61,28 @@ function AppCard({ app, index }) {
 
 export default function Apps() {
   usePageMeta(
-    'Apps | Technovia — Cheltenham, VIC',
-    'Access TechnoPOS, InvoiceGen, and ChairTime — the Technovia suite of business apps for POS, invoicing, and appointment booking.'
+    'Technovia Apps — TechnoPOS, ChairTime, InvoiceGen & WFHly',
+    'Access TechnoPOS, ChairTime, InvoiceGen, and WFHly — the Technovia suite of business apps for POS, booking, invoicing, and remote work tracking.',
+    '/apps'
   )
+
+  useJsonLd(useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: PRODUCTS.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'SoftwareApplication',
+        name: p.label,
+        description: p.desc,
+        url: p.url,
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        publisher: { '@type': 'Organization', name: 'Technovia' },
+      },
+    })),
+  }), []))
 
   const [headerRef, headerInView] = useInView()
 
@@ -122,6 +92,7 @@ export default function Apps() {
 
       {/* Hero */}
       <section className="hero" style={{ minHeight: '40vh', paddingTop: 10, paddingBottom: 1 }}>
+        <AnimatedBackdrop variant="purple" />
         <div className="hero-grid-bg" />
         <div className="hero-orb hero-orb-1" />
         <div className="hero-orb hero-orb-2" />
@@ -130,8 +101,8 @@ export default function Apps() {
             Technovia <span className="highlight">Apps</span>
           </h1>
           <p className="hero-subtitle">
-            Everything you need, in one place. TechnoPOS, InvoiceGen, and ChairTime —
-            three tools built to run your business, securely online, anytime, from any device.
+            Everything you need, in one place. TechnoPOS, ChairTime, InvoiceGen, and WFHly —
+            four tools built to run your business, securely online, anytime, from any device.
           </p>
         </div>
       </section>

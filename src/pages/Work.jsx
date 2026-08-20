@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar.jsx'
+import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
 import { useInView, usePageMeta, WORK_PROJECTS } from '../index.js'
 
@@ -8,6 +9,7 @@ function ProjectCard({ project, index }) {
     <div
       ref={ref}
       className={`work-card ${project.colorClass}${inView ? ' in-view' : ''}`}
+      data-cursor="VIEW"
       style={{ transitionDelay: `${index * 0.15}s` }}
     >
       <div className="work-card-top">
@@ -58,7 +60,8 @@ function ProjectCard({ project, index }) {
 export default function Work() {
   usePageMeta(
     'Our Work | Technovia — Cheltenham, VIC',
-    'Case studies of real projects built by Technovia, including Unity Products — an e-commerce platform fully integrated with TechnoPOS.'
+    'Case studies of real projects built by Technovia, including Unity Products — an e-commerce platform fully integrated with TechnoPOS.',
+    '/work'
   )
 
   const [headerRef, headerInView] = useInView()
@@ -69,6 +72,7 @@ export default function Work() {
 
       {/* Hero */}
       <section className="hero" style={{ minHeight: '40vh', paddingTop: 10, paddingBottom: 1 }}>
+        <AnimatedBackdrop variant="cyan" />
         <div className="hero-grid-bg" />
         <div className="hero-orb hero-orb-1" />
         <div className="hero-orb hero-orb-2" />
