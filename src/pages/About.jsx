@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, ABOUT_VALUES, STATS, usePageMeta } from '../index.js'
+import { useInView, ABOUT_VALUES, STATS, usePageMeta, handleCardSpotlight } from '../index.js'
 
 function ValuesSection() {
   const [ref, inView] = useInView()
@@ -21,7 +21,8 @@ function ValuesSection() {
         {ABOUT_VALUES.map((v, i) => (
           <div
             key={v.title}
-            className={`value-card${inView ? ' in-view' : ''}`}
+            className={`value-card spotlight-card${inView ? ' in-view' : ''}`}
+            onMouseMove={handleCardSpotlight}
             style={{ transitionDelay: `${i * 0.15}s` }}
           >
             <div className="value-icon">{v.icon}</div>
@@ -67,7 +68,7 @@ function DifferenceSection() {
     { icon: '🚀', title: 'Fast Turnaround', desc: 'We respect your time. Most repairs and jobs are completed same-day or next-day.' },
   ]
   return (
-    <section style={{ padding: '80px 5%', background: 'linear-gradient(180deg,var(--bg) 0%,rgba(12,8,30,1) 100%)', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: '80px 5%', background: 'linear-gradient(180deg,var(--bg) 0%,var(--bg-alt) 100%)', position: 'relative', overflow: 'hidden' }}>
       <div className="whyus-glow" />
       <div className="section-header" ref={ref} style={{ position: 'relative', zIndex: 1 }}>
         <div className={`section-tag${inView ? ' in-view' : ''}`}>The Technovia Way</div>
@@ -79,7 +80,8 @@ function DifferenceSection() {
         {points.map((p, i) => (
           <div
             key={p.title}
-            className={`diff-card${inView ? ' in-view' : ''}`}
+            className={`diff-card spotlight-card${inView ? ' in-view' : ''}`}
+            onMouseMove={handleCardSpotlight}
             style={{ transitionDelay: `${i * 0.1}s` }}
           >
             <div className="diff-icon">{p.icon}</div>

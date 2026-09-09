@@ -24,7 +24,7 @@ function ProductMock({ product }) {
         <div className="product-mock-url">{product.url.replace('https://', '')}</div>
       </div>
       <div className="product-mock-screen">
-        <AppMockScreen id={product.id} />
+        <AppMockScreen id={product.id} image={product.image} />
       </div>
       <div className="product-mock-body">
         <div className="product-mock-name">{product.label}</div>

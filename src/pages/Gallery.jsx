@@ -1,7 +1,7 @@
 import Navbar from '../components/Navbar.jsx'
 import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, usePageMeta } from '../index.js'
+import { useInView, usePageMeta, handleCardSpotlight } from '../index.js'
 
 // ── Real work photo data ──────────────────────────────────────────────────────
 // Replace src values with your own photos (drop them in /public/gallery/)
@@ -13,7 +13,7 @@ const GALLERY_ITEMS = [
     caption: 'Diagnosing a DJI Mavic Pro with motor failure — full inspection before repair.',
     src: '/gallery/drone-repair-1.jpeg',
     alt: 'Drone motor repair Cheltenham Technovia',
-    fallbackBg: '#0e1a2e',
+    fallbackBg: '#12111d',
     fallbackIcon: '🔧',
   },
   {
@@ -23,7 +23,7 @@ const GALLERY_ITEMS = [
     caption: 'Cell balancing and BMS check on a swollen LiPo pack.',
     src: '/gallery/battery-service-2.jpeg',
     alt: 'Drone battery repair cell balancing Cheltenham',
-    fallbackBg: '#0e1a1e',
+    fallbackBg: '#0d1a17',
     fallbackIcon: '🔋',
   },
   {
@@ -33,7 +33,7 @@ const GALLERY_ITEMS = [
     caption: 'Post-crash frame and arm replacement — ready to fly again.',
     src: '/gallery/drone-frame-1.jpeg',
     alt: 'Drone frame repair after crash Cheltenham Technovia',
-    fallbackBg: '#0e1a2e',
+    fallbackBg: '#12111d',
     fallbackIcon: '✈️',
   },
   {
@@ -43,7 +43,7 @@ const GALLERY_ITEMS = [
     caption: 'Capacity test and discharge cycle analysis before reconditioning.',
     src: '/gallery/battery-diag-1.jpeg',
     alt: 'Drone battery diagnostics capacity test',
-    fallbackBg: '#0e1a1e',
+    fallbackBg: '#0d1a17',
     fallbackIcon: '📊',
   },
   {
@@ -53,7 +53,7 @@ const GALLERY_ITEMS = [
     caption: 'Gimbal ribbon cable replacement on a Mavic Air 2.',
     src: '/gallery/drone-camera-1.jpeg',
     alt: 'Drone gimbal camera repair Cheltenham Technovia',
-    fallbackBg: '#0e1a2e',
+    fallbackBg: '#12111d',
     fallbackIcon: '📷',
   },
   {
@@ -63,7 +63,7 @@ const GALLERY_ITEMS = [
     caption: 'Fixing a bulk lot of customer batteries — we can handle any volume.',
     src: '/gallery/battery-buk-fix-1.jpeg',
     alt: 'Fixing Bulk Drone Batteries Cheltenham Technovia',
-    fallbackBg: '#0e1a1e',
+    fallbackBg: '#0d1a17',
     fallbackIcon: '♻️',
   },
 
@@ -84,7 +84,8 @@ function GalleryCard({ item, index }) {
   return (
     <div
       ref={ref}
-      className={`gallery-card${inView ? ' in-view' : ''}`}
+      className={`gallery-card spotlight-card${inView ? ' in-view' : ''}`}
+      onMouseMove={handleCardSpotlight}
       style={{ transitionDelay: `${index * 0.07}s` }}
     >
       <div className="gallery-card-img-wrap">

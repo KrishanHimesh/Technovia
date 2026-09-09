@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, usePageMeta, useJsonLd } from '../index.js'
+import { useInView, usePageMeta, useJsonLd, handleCardSpotlight } from '../index.js'
 
 /* ─── All service data from the skeleton ─────────────────────────────────── */
 const IT_SUBSECTIONS = [
@@ -156,7 +156,8 @@ function SubCard({ sub, index }) {
   return (
     <div
       ref={ref}
-      className={`sub-card ${sub.colorClass}${inView ? ' in-view' : ''}`}
+      className={`sub-card spotlight-card ${sub.colorClass}${inView ? ' in-view' : ''}`}
+      onMouseMove={handleCardSpotlight}
       style={{ transitionDelay: `${index * 0.08}s` }}
     >
       <div className="sub-card-icon">{sub.icon}</div>

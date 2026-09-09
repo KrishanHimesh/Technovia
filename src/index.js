@@ -29,6 +29,19 @@ export function useInView(threshold = 0.15) {
   return [ref, inView]
 }
 
+// ── Spotlight hover (mouse-follow glow on interactive cards) ──────────────────
+/**
+ * handleCardSpotlight(e)
+ * Attach to onMouseMove on any element with the `spotlight-card` class to
+ * drive a soft radial highlight that follows the cursor — CSS reads the
+ * position back via the --mx / --my custom properties it sets here.
+ */
+export function handleCardSpotlight(e) {
+  const rect = e.currentTarget.getBoundingClientRect()
+  e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`)
+  e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`)
+}
+
 // ── Navigation ────────────────────────────────────────────────────────────────
 export const NAV_LINKS = [
   { label: 'Home',         path: '/'         },
@@ -235,7 +248,7 @@ export const PRODUCTS = [
     label: 'TechnoPOS',
     tagline: 'Retail & business management platform',
     icon: '🖥️',
-    image: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=900&q=80',
+    image: 'https://images.unsplash.com/photo-1742836531271-98fd8151d257?w=900&q=80',
     url: 'https://app.technovia.com.au',
     colorClass: 'color-purple',
     desc: 'Manage inventory, sales, customers and reporting from one central platform — built for real retail floors, not spreadsheets.',
@@ -252,7 +265,7 @@ export const PRODUCTS = [
     label: 'ChairTime',
     tagline: 'Smart booking & appointment management',
     icon: '📅',
-    image: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=900&q=80',
+    image: 'https://images.unsplash.com/photo-1771054243991-e7b2d194ac96?w=900&q=80',
     url: 'https://booking.technovia.com.au',
     colorClass: 'color-cyan',
     desc: 'Let clients book, reschedule and manage appointments online, any time — while you manage staff schedules from one calendar.',
@@ -283,7 +296,7 @@ export const PRODUCTS = [
   },
   {
     id: 'wfh',
-    label: 'WFHly',
+    label: 'WFH Tracker',
     tagline: 'Work-from-home tracking & expenses',
     icon: '🏠',
     image: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=900&q=80',

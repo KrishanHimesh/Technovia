@@ -1,14 +1,15 @@
 import Navbar from '../components/Navbar.jsx'
 import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
-import { useInView, usePageMeta, WORK_PROJECTS } from '../index.js'
+import { useInView, usePageMeta, WORK_PROJECTS, handleCardSpotlight } from '../index.js'
 
 function ProjectCard({ project, index }) {
   const [ref, inView] = useInView(0.1)
   return (
     <div
       ref={ref}
-      className={`work-card ${project.colorClass}${inView ? ' in-view' : ''}`}
+      className={`work-card spotlight-card ${project.colorClass}${inView ? ' in-view' : ''}`}
+      onMouseMove={handleCardSpotlight}
       data-cursor="VIEW"
       style={{ transitionDelay: `${index * 0.15}s` }}
     >

@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar.jsx'
 import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
 import Footer from '../components/Footer.jsx'
 import AppMockScreen from '../components/AppMockScreens.jsx'
-import { useInView, usePageMeta, useJsonLd, PRODUCTS } from '../index.js'
+import { useInView, usePageMeta, useJsonLd, PRODUCTS, handleCardSpotlight } from '../index.js'
 
 const APPS = PRODUCTS
 
@@ -12,7 +12,8 @@ function AppCard({ app, index }) {
   return (
     <div
       ref={ref}
-      className={`service-card ${app.colorClass}${inView ? ' in-view' : ''}`}
+      className={`service-card spotlight-card ${app.colorClass}${inView ? ' in-view' : ''}`}
+      onMouseMove={handleCardSpotlight}
       style={{
         transitionDelay: `${index * 0.15}s`,
         maxWidth: 480,
@@ -27,7 +28,7 @@ function AppCard({ app, index }) {
           <span /><span /><span />
           <span className="app-card-mock-icon-sm">{app.icon}</span>
         </div>
-        <AppMockScreen id={app.id} />
+        <AppMockScreen id={app.id} image={app.image} />
       </div>
       <div
         className="card-body"
@@ -41,7 +42,7 @@ function AppCard({ app, index }) {
         }}
       >
         <h3 className="card-title" style={{ fontSize: '1.6rem', marginBottom: 4 }}>{app.label}</h3>
-        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, marginBottom: 18, textAlign: 'center' }}>{app.tagline}</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 18, textAlign: 'center' }}>{app.tagline}</p>
         <ul className="card-list" style={{ marginBottom: 24, flex: 1 }}>
           {app.features.map((f) => (
             <li key={f}><span className="card-list-dot">◆</span>{f}</li>
@@ -62,8 +63,8 @@ function AppCard({ app, index }) {
 
 export default function Apps() {
   usePageMeta(
-    'Technovia Apps — TechnoPOS, ChairTime, InvoiceGen & WFHly',
-    'Access TechnoPOS, ChairTime, InvoiceGen, and WFHly — the Technovia suite of business apps for POS, booking, invoicing, and remote work tracking.',
+    'Technovia Apps — TechnoPOS, ChairTime, InvoiceGen & WFH Tracker',
+    'Access TechnoPOS, ChairTime, InvoiceGen, and WFH Tracker — the Technovia suite of business apps for POS, booking, invoicing, and remote work tracking.',
     '/apps'
   )
 
@@ -102,7 +103,7 @@ export default function Apps() {
             Technovia <span className="highlight">Apps</span>
           </h1>
           <p className="hero-subtitle">
-            Everything you need, in one place. TechnoPOS, ChairTime, InvoiceGen, and WFHly —
+            Everything you need, in one place. TechnoPOS, ChairTime, InvoiceGen, and WFH Tracker —
             four tools built to run your business, securely online, anytime, from any device.
           </p>
         </div>

@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+// eslint-disable-next-line no-unused-vars
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import AnimatedBackdrop from '../components/AnimatedBackdrop.jsx'
@@ -8,7 +10,7 @@ import ProductsShowcase from '../components/ProductsShowcase.jsx'
 import ProcessSection from '../components/ProcessSection.jsx'
 import ServicesInteractive from '../components/ServicesInteractive.jsx'
 import HeroDashboard from '../components/HeroDashboard.jsx'
-import { useInView, useCountUp, STATS, WHY_FEATURES, WORK_PROJECTS, TESTIMONIALS, usePageMeta } from '../index.js'
+import { useInView, useCountUp, STATS, WHY_FEATURES, WORK_PROJECTS, TESTIMONIALS, usePageMeta, handleCardSpotlight } from '../index.js'
 //prod
 // ── Gallery Teaser ────────────────────────────────────────────────────────────
 const TEASER_PHOTOS = [
@@ -80,8 +82,9 @@ function WorkTeaser() {
         </p>
       </div>
       <div
-        className={`work-card ${project.colorClass}${inView ? ' in-view' : ''}`}
-      data-cursor="VIEW"
+        className={`work-card spotlight-card ${project.colorClass}${inView ? ' in-view' : ''}`}
+        onMouseMove={handleCardSpotlight}
+        data-cursor="VIEW"
         style={{ maxWidth: 900, margin: '0 auto' }}
       >
         <div className="work-card-top">
@@ -186,7 +189,8 @@ function WhyUsSection() {
           {WHY_FEATURES.map((f, i) => (
             <div
               key={f.title}
-              className={`feature-card${inView ? ' in-view' : ''}`}
+              className={`feature-card spotlight-card${inView ? ' in-view' : ''}`}
+              onMouseMove={handleCardSpotlight}
               style={{ transitionDelay: `${0.15 + i * 0.1}s` }}
             >
               <div className="feature-icon">{f.icon}</div>
@@ -206,7 +210,8 @@ function TestimonialCard({ t, index }) {
   return (
     <div
       ref={ref}
-      className={`testimonial-card${inView ? ' in-view' : ''}`}
+      className={`testimonial-card spotlight-card${inView ? ' in-view' : ''}`}
+      onMouseMove={handleCardSpotlight}
       style={{ transitionDelay: `${index * 0.12}s` }}
     >
       <div className="testimonial-quote-mark">"</div>
@@ -265,6 +270,12 @@ function CTASection() {
 const ROTATING_WORDS = ['Laptops.', 'Drones.', 'CNC Jobs.', 'POS Systems.', 'Everything Tech.']
 
 function HeroSection() {
+  const heroRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
+  const yMesh = useTransform(scrollYProgress, [0, 1], [0, 70])
+  const yOrbs = useTransform(scrollYProgress, [0, 1], [0, 140])
+  const yDash = useTransform(scrollYProgress, [0, 1], [0, 40])
+  const fade  = useTransform(scrollYProgress, [0, 0.8], [1, 0])
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
   const [wordIndex, setWordIndex] = useState(0)
   useEffect(() => {
@@ -281,14 +292,19 @@ function HeroSection() {
   }, [])
 
   return (
-    <section className="hero" style={{ background: `radial-gradient(ellipse at ${mousePos.x}% ${mousePos.y}%, rgba(124,58,237,0.22) 0%, rgba(6,182,212,0.1) 40%, #080814 70%)` }}>
+    <section
+      ref={heroRef}
+      className="hero"
+      style={{ background: `radial-gradient(ellipse at ${mousePos.x}% ${mousePos.y}%, rgba(139,92,246,0.30) 0%, rgba(34,211,238,0.16) 40%, var(--bg) 72%)` }}
+    >
+      <motion.div className="hero-mesh" style={{ y: yMesh }} />
       <AnimatedBackdrop variant="purple" density={1.2} />
       <div className="hero-grid-bg" />
-      <div className="hero-orb hero-orb-1" />
-      <div className="hero-orb hero-orb-2" />
-      <div className="hero-orb hero-orb-3" />
+      <motion.div className="hero-orb hero-orb-1" style={{ y: yOrbs }} />
+      <motion.div className="hero-orb hero-orb-2" style={{ y: yOrbs }} />
+      <motion.div className="hero-orb hero-orb-3" style={{ y: yOrbs }} />
 
-      <div className="hero-content">
+      <motion.div className="hero-content" style={{ y: yDash, opacity: fade }}>
         <h1 className="hero-title">
           IT Support, Drone Repair &amp; CNC Services in <span className="highlight">Cheltenham, VIC</span>
         </h1>
@@ -308,7 +324,7 @@ function HeroSection() {
         <div className="hero-image-wrap" style={{ marginTop: 56 }}>
           <HeroDashboard />
         </div>
-      </div>
+      </motion.div>
 
       <div className="hero-scroll">
         <span>scroll</span>
@@ -321,7 +337,7 @@ function HeroSection() {
 export default function Home() {
   usePageMeta(
     'Technovia | IT Support, Drone Repair & CNC Services — Cheltenham, VIC',
-    'Technovia is Cheltenham\'s trusted tech specialist — IT support, drone repair, CNC programming, plus TechnoPOS, ChairTime, InvoiceGen & WFHly. Same-day service, honest pricing.',
+    'Technovia is Cheltenham\'s trusted tech specialist — IT support, drone repair, CNC programming, plus TechnoPOS, ChairTime, InvoiceGen & WFH Tracker. Same-day service, honest pricing.',
     '/'
   )
   return (

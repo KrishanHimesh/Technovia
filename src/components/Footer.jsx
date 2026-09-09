@@ -1,11 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FOOTER_SERVICES, FOOTER_CONTACTS, NAV_LINKS } from '../index.js'
-
-const FOOTER_APPS = [
-  { label: '🖥️ TechnoPOS',      url: 'https://app.technovia.com.au'     },
-  { label: '🧾 InvoiceGen',      url: 'https://invoice.technovia.com.au' },
-  { label: '📅 ChairTime',       url: 'https://booking.technovia.com.au' },
-]
+import { FOOTER_SERVICES, FOOTER_CONTACTS, PRODUCTS } from '../index.js'
 
 export default function Footer() {
   return (
@@ -38,7 +32,7 @@ export default function Footer() {
           {/* Apps */}
           <div>
             <div className="footer-col-heading purple">Our Apps</div>
-            {FOOTER_APPS.map((a) => (
+            {PRODUCTS.map((a) => (
               <a
                 key={a.url}
                 href={a.url}
@@ -46,7 +40,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="footer-link"
               >
-                {a.label}
+                {a.icon} {a.label}
               </a>
             ))}
           </div>
@@ -54,7 +48,7 @@ export default function Footer() {
           {/* Work */}
           <div>
             <div className="footer-col-heading cyan">Our Work</div>
-            <Link to="/work" className="footer-link">Case Studies</Link>
+            <Link to="/work" className="footer-link"></Link>
             <a
               href="https://unityproducts.lk"
               target="_blank"

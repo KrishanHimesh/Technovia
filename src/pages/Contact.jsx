@@ -79,7 +79,7 @@ function ContactForm() {
       {submitted ? (
         <div className="form-success show">
           <div className="form-success-icon">✅</div>
-          <p style={{ fontFamily: "'DM Sans',sans-serif", color: 'rgba(255,255,255,0.7)', marginTop: 8 }}>
+          <p style={{ fontFamily: "'Inter',sans-serif", color: 'var(--text-soft)', marginTop: 8 }}>
             Thanks! We'll be in touch shortly.
           </p>
         </div>
